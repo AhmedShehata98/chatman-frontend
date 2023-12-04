@@ -3,49 +3,42 @@ import { ROUTES_LIST } from "../router/routes-list";
 import Avatar from "../components/Avatar";
 import { useRecoilValue } from "recoil";
 import { authStateAtom } from "../atoms/login.atom";
+import SidebarLink from "../components/SidebarLink";
 
 function SideMenu() {
   const { pathname } = useLocation();
   const { user } = useRecoilValue(authStateAtom);
 
   return (
-    <aside className="flex h-[calc(100dvh-60px)] items-start justify-start">
-      <article className="flex h-full flex-col bg-[#202C33]">
+    <aside className="flex h-[calc(100dvh-70px)] items-start justify-start">
+      <article className="bg-primary-100 flex h-full flex-col">
         <ul className="grid grid-flow-row gap-2 p-1.5">
-          <Link
+          <SidebarLink
             to={ROUTES_LIST.chatRoom}
-            className={
-              pathname === ROUTES_LIST.chatRoom
-                ? "relative flex h-12 w-12 cursor-pointer items-center justify-center rounded-md bg-zinc-600 shadow-md after:absolute after:left-0 after:top-1/2 after:h-1/2 after:w-1.5 after:-translate-y-1/2 after:rounded-2xl after:bg-[#00A884] after:content-['']"
-                : "relative flex h-12 w-12 cursor-pointer items-center justify-center rounded-md shadow-md hover:bg-zinc-700"
-            }
+            isActive={pathname === ROUTES_LIST.chatRoom}
           >
             <span className="text-2xl text-white">
               <i className="fi fi-rr-comment-alt"></i>
             </span>
-          </Link>
-          <Link
+          </SidebarLink>
+          <SidebarLink
             to={ROUTES_LIST.call}
-            className={
-              pathname === ROUTES_LIST.call
-                ? "relative flex h-12 w-12 cursor-pointer items-center justify-center rounded-md bg-zinc-600 shadow-md after:absolute after:left-0 after:top-1/2 after:h-1/2 after:w-1.5 after:-translate-y-1/2 after:rounded-2xl after:bg-[#00A884] after:content-['']"
-                : "relative flex h-12 w-12 cursor-pointer items-center justify-center rounded-md shadow-md hover:bg-zinc-700"
-            }
+            isActive={pathname === ROUTES_LIST.call}
           >
             <span className="text-2xl text-white">
               <i className="fi fi-sr-phone-call"></i>
             </span>
-          </Link>
+          </SidebarLink>
         </ul>
         <ul className="mt-auto flex flex-col items-center justify-center gap-2 py-3 pe-1">
-          <button
-            type="button"
-            className="relative flex h-12 w-12 cursor-pointer items-center justify-center rounded-md shadow-md hover:bg-zinc-700"
+          <SidebarLink
+            to={ROUTES_LIST.settings}
+            isActive={pathname === ROUTES_LIST.settings}
           >
             <span className="text-2xl text-white">
               <i className="fi fi-rr-settings"></i>
             </span>
-          </button>
+          </SidebarLink>
           <Avatar
             status={user?.status || "OFFLINE"}
             showStatus

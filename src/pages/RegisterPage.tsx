@@ -5,9 +5,9 @@ import SignUpComponent from "../components/SignupComponent";
 const RegisterPage = () => {
   const [searchParams] = useSearchParams();
   return (
-    <main className="w-full min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-[#00A884] from-40% to-[#111B21] to-40%">
-      <section className="w-1/3 h-1/3 flex flex-col gap-8 ">
-        <h2 className="text-3xl uppercase font-mono text-white">ChatMan</h2>
+    <main className="from-secondary-100 to-primary-100 flex min-h-screen w-full flex-col items-center justify-center bg-gradient-to-b from-40% to-40%">
+      <section className="flex h-1/3 w-1/3 flex-col gap-8 max-lg:w-2/3 max-md:w-5/6 max-sm:w-11/12">
+        <h2 className="font-mono text-3xl uppercase text-white">ChatMan</h2>
         {searchParams.get("sec") === null ||
         searchParams.get("sec") === "login" ? (
           <LoginComponent />

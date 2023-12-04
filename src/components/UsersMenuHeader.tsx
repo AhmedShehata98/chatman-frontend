@@ -38,11 +38,10 @@ function UsersMenuHeader({ onCreateNewChat, onFilter, title }: Props) {
   async function handleChooseUser(receiverId: string) {
     setQuery("");
     queryClient.invalidateQueries({ queryKey: ["user-data"] });
-    const conversation = await mutateCreateConversation({
+    await mutateCreateConversation({
       participants: [receiverId, user?._id as string],
       conversationType: "PRIVATE",
     });
-    console.log(conversation);
   }
 
   useEffect(() => {
@@ -52,6 +51,7 @@ function UsersMenuHeader({ onCreateNewChat, onFilter, title }: Props) {
       });
     }
   }, [deferredQuery]);
+
   return (
     <div className="flex h-max w-full flex-col items-center justify-between px-9 py-6">
       <div className="flex w-full items-center justify-between">

@@ -32,7 +32,7 @@ function ConversationList({ conversationData, userId }: Props) {
   };
 
   return (
-    <ul className="flex max-h-full max-w-full flex-col items-start justify-start gap-2 ">
+    <ul className="conversation-list">
       {conversationData?.map((conversation) => {
         const userTargetIdx = conversation.participants.findIndex(
           (usr) => usr._id !== userId,

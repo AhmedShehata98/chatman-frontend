@@ -75,7 +75,7 @@ function SignUpComponent() {
     <form
       onSubmit={handleSubmit}
       action=""
-      className="flex w-full flex-col rounded-md bg-white px-16 py-4 shadow-lg"
+      className="flex w-full flex-col rounded-md bg-white px-16 py-4 shadow-lg max-md:px-10 max-md:py-6"
     >
       <h3 className="mb-6 mt-6 text-lg font-semibold capitalize text-zinc-500">
         fill your information and create your account
@@ -99,7 +99,7 @@ function SignUpComponent() {
           htmlFor="profileImage"
           className={`${clsx(
             profileImgPreview ? "hidden" : "flex",
-          )} cursor-pointer items-center justify-center text-4xl text-[#017561] hover:brightness-150`}
+          )} text-secondary-200 cursor-pointer items-center justify-center text-4xl hover:brightness-150`}
         >
           <span
             className={`${clsx(
@@ -124,27 +124,27 @@ function SignUpComponent() {
         name="fullName"
         id="fullName"
         placeholder="full name..."
-        className="mb-5 w-full rounded-md border-2 bg-[#f9f9fa] px-6 py-4 shadow-sm focus:border-[#00A884] focus:outline-none"
+        className="focus:border-secondary-200 mb-5 w-full rounded-md border-2 bg-[#f9f9fa] px-6 py-4 shadow-sm focus:outline-none"
       />
       <input
         type="email"
         name="email"
         id="email"
         placeholder="email address..."
-        className="mb-5 w-full rounded-md border-2 bg-[#f9f9fa] px-6 py-4 shadow-sm focus:border-[#00A884] focus:outline-none"
+        className="focus:border-secondary-200 mb-5 w-full rounded-md border-2 bg-[#f9f9fa] px-6 py-4 shadow-sm focus:outline-none"
       />
       <input
         type="password"
         name="password"
         id="password"
         placeholder="**************"
-        className="mb-5 w-full rounded-md border-2 bg-[#f9f9fa] px-6 py-4 shadow-sm focus:border-[#00A884] focus:outline-none"
+        className="focus:border-secondary-200 mb-5 w-full rounded-md border-2 bg-[#f9f9fa] px-6 py-4 shadow-sm focus:outline-none"
       />
       <button
         type="submit"
         title="click to login"
         disabled={isPending}
-        className="mb-6 mt-5 flex flex-row items-center justify-center gap-4 rounded-md bg-[#017561] px-4 py-5 text-xl font-semibold capitalize text-white shadow hover:brightness-125 disabled:bg-[#00332b]"
+        className="bg-secondary-200 mb-6 mt-5 flex flex-row items-center justify-center gap-4 rounded-md px-4 py-5 text-xl font-semibold capitalize text-white shadow hover:brightness-125 disabled:bg-[#00332b]"
       >
         {isPending ? (
           <>
@@ -159,7 +159,7 @@ function SignUpComponent() {
       </button>
       <Link
         to={`${ROUTES_LIST.register}?sec=login`}
-        className="text-center capitalize text-[#017561] underline"
+        className="text-secondary-200 text-center capitalize underline"
       >
         have already account ? login
       </Link>

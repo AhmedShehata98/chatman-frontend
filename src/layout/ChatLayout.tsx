@@ -9,8 +9,8 @@ function ChatLayout({
   conversationElement: ReactNode;
 }) {
   return (
-    <article className="flex h-[calc(100dvh-60px)] max-h-[calc(100dvh-60px)] w-full items-start justify-start divide-x divide-slate-800">
-      <div className="flex h-full w-1/3 min-w-[33.3%] flex-col items-start justify-start bg-[#111B21]">
+    <article className="chat-page">
+      <div className="chat-page__conversation-wrapper">
         <UsersMenuHeader
           title="chats"
           onCreateNewChat={() => {

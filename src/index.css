@@ -10,4 +10,21 @@
   }
 }
 @tailwind components;
+@layer components {
+  .chat-page {
+    @apply relative flex h-full max-h-[calc(100dvh-70px)] w-full items-start justify-start divide-x divide-slate-800;
+  }
+  .chat-page__conversation-wrapper {
+    @apply bg-primary-200 flex h-full w-1/3 min-w-[33.3%] flex-col items-start justify-start max-md:w-full max-md:min-w-full;
+  }
+  .conversation-list {
+    @apply flex max-h-full max-w-full flex-col items-start justify-start gap-2;
+  }
+  .conversation-card {
+    @apply flex w-full cursor-pointer items-center justify-start gap-4 rounded-md bg-opacity-40 px-3 py-4 shadow-md hover:bg-gray-800;
+  }
+  .chat-room {
+    @apply flex h-full w-full flex-col items-start justify-start bg-cover bg-no-repeat max-md:absolute max-md:left-0 max-md:top-0;
+  }
+}
 @tailwind utilities;

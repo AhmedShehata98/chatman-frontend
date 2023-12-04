@@ -16,10 +16,7 @@ export const ENDPOINTS = {
   uploadImage: "/api/upload/img",
 };
 export const CHATMAN_API = axios.create({
-  baseURL:
-    import.meta.env.MODE === "production"
-      ? "https://chatman-api.fly.dev"
-      : undefined,
+  baseURL,
 });
 export const CHATMAN_PRIVATE_API = axios.create({
   baseURL,

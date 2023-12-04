@@ -4,7 +4,7 @@ import SideMenu from "./SideMenu";
 
 function MainLayout({ children }: { children: ReactNode }) {
   return (
-    <main className="w-full h-screen bg-[#0B141A]">
+    <main className="bg-primary-200 h-screen w-full">
       <Header />
       <section className="flex items-start justify-start">
         <SideMenu />

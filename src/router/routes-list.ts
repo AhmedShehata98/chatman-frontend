@@ -4,4 +4,5 @@ export const ROUTES_LIST = {
   chat: "/chat",
   call: "/call",
   chatRoom: "/chat-room",
+  settings: "/settings",
 };
