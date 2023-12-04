@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { ROUTES_LIST } from "../router/routes-list";
 import Avatar from "../components/Avatar";
 import { useRecoilValue } from "recoil";
@@ -11,7 +11,7 @@ function SideMenu() {
 
   return (
     <aside className="flex h-[calc(100dvh-70px)] items-start justify-start">
-      <article className="bg-primary-100 flex h-full flex-col">
+      <article className="flex h-full flex-col bg-primary-100">
         <ul className="grid grid-flow-row gap-2 p-1.5">
           <SidebarLink
             to={ROUTES_LIST.chatRoom}
