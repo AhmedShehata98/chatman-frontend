@@ -1,3 +1,7 @@
 import { io } from "socket.io-client";
-
-export const chatManWebSocket = io("http://localhost:3000");
+const baseURL =
+  import.meta.env.MODE === "production"
+    ? "https://chatman-api.fly.dev"
+    : "http://127.0.0.1:3000";
+console.log(import.meta.env.MODE);
+export const chatManWebSocket = io(baseURL);
