@@ -1,7 +1,10 @@
 import axios from "axios";
 import Cookies from "js-cookie";
 
-const baseURL = "http://127.0.0.1:3000";
+const baseURL =
+  import.meta.env.MODE === "production"
+    ? "https://chatman-api.fly.dev"
+    : "http://127.0.0.1:3000";
 export const ENDPOINTS = {
   signup: "/api/user/signup",
   login: "/api/user/login",
