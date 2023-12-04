@@ -14,7 +14,7 @@ function ChatRoom() {
       style={{ backgroundImage: `url(${background})` }}
       className="chat-room"
     >
-      <div className="h-app-height relative w-full">
+      <div className="relative h-[100dvh] w-full">
         <ChatHeader
           userLabel={
             <ChatHeader.UserLabel

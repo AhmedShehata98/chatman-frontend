@@ -49,7 +49,7 @@ function Avatar({
         <img
           src={src}
           alt="avatar"
-          className="aspect-square max-w-full overflow-hidden rounded-full object-cover object-center"
+          className="aspect-square w-full overflow-hidden rounded-full object-cover object-center"
         />
       )}
     </button>

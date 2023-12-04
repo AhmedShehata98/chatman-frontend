@@ -4,21 +4,35 @@ import { authStateAtom } from "../atoms/login.atom";
 import useGetChatMessages from "../hooks/useGetChatMessages";
 import { conversationAtom } from "../atoms/conversation.atom";
 import MessageCard from "./MessageCard";
+import { useEffect, useRef } from "react";
 
 function ChatBody() {
+  const messagesRef = useRef<HTMLUListElement | null>(null);
+  const messagesWrapperRef = useRef<HTMLDivElement | null>(null);
   const targetConversation = useRecoilValue(conversationAtom);
   const { isLoadingChatsMessages, isFetchedChatsMessages, chatMessages } =
     useGetChatMessages({
       conversationId: targetConversation?._id as string,
     });
   const { user: me } = useRecoilValue(authStateAtom);
+  useEffect(() => {
+    if (messagesRef.current && messagesWrapperRef.current)
+      messagesWrapperRef.current?.scrollBy({
+        behavior: "smooth",
+        top: messagesRef.current?.scrollHeight,
+      });
+  }, [messagesRef.current?.scrollHeight]);
 
   return (
-    <div className="mb-16 flex h-full max-h-full w-full flex-grow flex-col gap-7 overflow-y-auto px-6 py-5 ">
+    <div
+      ref={messagesWrapperRef}
+      className="flex h-[calc(100dvh-65px-85px)] max-h-[100dvh] w-full flex-grow flex-col gap-7 overflow-y-auto px-6 py-5 "
+    >
       <ul
         className={`${clsx(
           isLoadingChatsMessages && "hidden",
         )} flex w-full flex-col items-end justify-end gap-2 even:self-end`}
+        ref={messagesRef}
       >
         {isFetchedChatsMessages
           ? chatMessages?.map((message) => (

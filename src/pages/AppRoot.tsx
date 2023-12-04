@@ -58,26 +58,29 @@ const AppRoot = () => {
   }, [Cookies.get("isLoggedIn"), Cookies.get("token")]);
 
   useEffect(() => {
-    mutateSessionStatus(
-      { lastSeenDate: Date.now(), status: "ONLINE" },
-      {
-        onSuccess: (data) => {
-          console.log(data);
-        },
-      },
-    );
-    return () => {
+    const token = Cookies.get("token");
+    if (token)
       mutateSessionStatus(
-        { lastSeenDate: Date.now(), status: "OFFLINE" },
+        { lastSeenDate: Date.now(), status: "ONLINE" },
         {
           onSuccess: (data) => {
             console.log(data);
           },
         },
       );
+    return () => {
+      if (token)
+        mutateSessionStatus(
+          { lastSeenDate: Date.now(), status: "OFFLINE" },
+          {
+            onSuccess: (data) => {
+              console.log(data);
+            },
+          },
+        );
       console.log("clean up session");
     };
-  }, []);
+  }, [Cookies.get("token")]);
 
   return (
     <MainLayout>

@@ -1,16 +1,9 @@
-import {
-  ReactNode,
-  FormEvent,
-  useEffect,
-  useState,
-  ChangeEvent,
-  useRef,
-} from "react";
+import { ReactNode, FormEvent, useEffect, ChangeEvent, useRef } from "react";
 import { chatManWebSocket } from "../services/ws";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { conversationAtom } from "../atoms/conversation.atom";
 import { authStateAtom } from "../atoms/login.atom";
-import { messagesAtom } from "../atoms/messages.atom";
+import { messageContentAtom, messagesAtom } from "../atoms/messages.atom";
 import { wsEventsKeys } from "../constants/wsConstants";
 
 type Props = {
@@ -24,11 +17,12 @@ function ChatFooter({
   attachmentButton,
   emojiButton,
   messageInput,
-  sendButton,
-} // voiceButton,
-: Props) {
+  sendButton, // voiceButton,
+}: Props) {
   const targetRoom = useRecoilValue(conversationAtom);
   const { user: me } = useRecoilValue(authStateAtom);
+  const [messageContent, setMessageContent] =
+    useRecoilState(messageContentAtom);
   const setMessagesAtom = useSetRecoilState(messagesAtom);
 
   const handleIncomingMessage = (message: Message) => {
@@ -50,8 +44,7 @@ function ChatFooter({
   const handleSubmit = (ev: FormEvent<HTMLFormElement>) => {
     const target = ev.target as HTMLFormElement;
     ev.preventDefault();
-    const fd = new FormData(ev.currentTarget);
-    const textMessage = fd.get("text-message") as string;
+    // const fd = new FormData(ev.currentTarget);
 
     if (targetRoom === null)
       throw new Error(`expected room data but got: ${targetRoom}`);
@@ -60,10 +53,11 @@ function ChatFooter({
     sendMessage({
       conversationId: targetRoom._id as string,
       sender: me._id,
-      message: textMessage,
+      message: messageContent.message,
     });
 
     target.reset();
+    setMessageContent({ media: "", message: "" });
   };
 
   useEffect(() => {
@@ -76,7 +70,7 @@ function ChatFooter({
   return (
     <form
       onSubmit={handleSubmit}
-      className="absolute bottom-0 flex w-full items-center justify-start gap-4 bg-[#111B21] px-5 py-2"
+      className="z-10 flex h-[65px] w-full items-center justify-start gap-4 bg-primary-100 px-3 py-2 max-lg:gap-2"
     >
       <div className="flex items-center justify-center gap-3">
         {emojiButton}
@@ -97,7 +91,7 @@ const EmojiButton = () => {
   return (
     <button
       type="button"
-      className="flex h-12 w-12 items-center justify-center rounded-md text-2xl text-zinc-200 hover:bg-zinc-700 hover:bg-opacity-60"
+      className="flex items-center justify-center rounded-md p-3 text-2xl text-zinc-200 hover:bg-zinc-700 hover:bg-opacity-60 max-lg:text-lg"
     >
       <i className="fi fi-rr-grin-alt"></i>
     </button>
@@ -107,7 +101,7 @@ const AttachmentButton = () => {
   return (
     <button
       type="button"
-      className="flex h-12 w-12 items-center justify-center rounded-md text-2xl text-zinc-200 hover:bg-zinc-700 hover:bg-opacity-60"
+      className="flex items-center justify-center rounded-md p-3 text-2xl text-zinc-200 hover:bg-zinc-700 hover:bg-opacity-60 max-lg:text-lg"
     >
       <i className="fi fi-rr-clip"></i>
     </button>
@@ -117,9 +111,9 @@ const SendButton = () => {
   return (
     <button
       type="submit"
-      className="flex h-12 w-12 items-center justify-center rounded-md text-2xl text-zinc-200 hover:bg-zinc-700 hover:bg-opacity-60"
+      className="flex aspect-square w-12 items-center justify-center rounded-full bg-secondary-100 text-2xl text-black hover:bg-secondary-200 hover:bg-opacity-60 hover:text-zinc-300 max-lg:text-lg"
     >
-      <i className="fi fi-rr-paper-plane-top"></i>
+      <i className="fi fi-rr-paper-plane-top inline-block -rotate-45 transition-transform hover:-translate-y-2 hover:translate-x-2"></i>
     </button>
   );
 };
@@ -127,7 +121,7 @@ const VoiceButton = () => {
   return (
     <button
       type="button"
-      className="flex h-12 w-12 items-center justify-center rounded-md text-2xl text-zinc-200 hover:bg-zinc-700 hover:bg-opacity-60"
+      className="flex items-center justify-center rounded-md p-3 text-2xl text-zinc-200 hover:bg-zinc-700 hover:bg-opacity-60 max-lg:text-lg"
     >
       <i className="fi fi-rr-circle-microphone"></i>
     </button>
@@ -136,11 +130,15 @@ const VoiceButton = () => {
 const MessageInput = () => {
   const { user: me } = useRecoilValue(authStateAtom);
   const conversation = useRecoilValue(conversationAtom);
+  const [messageContent, setMessageContent] =
+    useRecoilState(messageContentAtom);
   const timeOutRef = useRef(0);
-  const [textMessage, setTextMessage] = useState("");
 
   function handleChange(ev: ChangeEvent<HTMLInputElement>) {
-    setTextMessage(ev.target.value);
+    setMessageContent((currVal) => ({
+      ...currVal,
+      message: ev.target.value,
+    }));
     chatManWebSocket.emit(wsEventsKeys.typing, {
       fullName: me?.fullName,
       conversationId: conversation?._id,
@@ -166,12 +164,12 @@ const MessageInput = () => {
       type="text"
       name="text-message"
       id="text-message"
-      value={textMessage}
+      value={messageContent.message}
       onChange={handleChange}
       onKeyUp={handleKeyUp}
       autoComplete="off"
       placeholder="type a message"
-      className="grow rounded-md bg-inherit px-3 py-3 text-lg text-white caret-slate-400 placeholder:capitalize focus:outline-none focus:brightness-150"
+      className="flex-grow rounded-md bg-inherit px-3 py-2 text-lg text-white caret-slate-400 placeholder:capitalize focus:outline-none focus:brightness-150"
     />
   );
 };

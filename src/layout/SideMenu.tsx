@@ -10,7 +10,7 @@ function SideMenu() {
   const { user } = useRecoilValue(authStateAtom);
 
   return (
-    <aside className="flex h-[calc(100dvh-70px)] items-start justify-start">
+    <aside className="flex h-[100dvh] items-start justify-start">
       <article className="flex h-full flex-col bg-primary-100">
         <ul className="grid grid-flow-row gap-2 p-1.5">
           <SidebarLink
