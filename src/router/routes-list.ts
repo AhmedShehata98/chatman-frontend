@@ -3,4 +3,5 @@ export const ROUTES_LIST = {
   register: "/register",
   chat: "/chat",
   call: "/call",
+  chatRoom: "/chat-room",
 };

@@ -6,12 +6,12 @@ type Props = {
   src: string | null;
   onClick?: React.MouseEventHandler;
   className?: string;
-  isOnline?: boolean;
+  status?: "OFFLINE" | "ONLINE" | "IDLE";
   showStatus: boolean;
 };
 function Avatar({
   showStatus = false,
-  isOnline,
+  status,
   onClick,
   fullName,
   className,
@@ -24,17 +24,20 @@ function Avatar({
     };
     return `${shortcut.fName}${shortcut.lName}`;
   }
+
   return (
     <button
       type="button"
       onClick={onClick}
-      className={`relative flex h-12 w-12 items-center justify-center rounded-full border-2 shadow-md ${clsx(
+      className={`relative flex h-12 w-12 items-center justify-center rounded-full border-2 ${clsx(
         className,
       )}`}
     >
       <span
         className={`absolute -bottom-1 left-0 inline-block h-5 w-5 rounded-full ${clsx(
-          isOnline ? "bg-emerald-400" : "bg-zinc-500",
+          { "bg-emerald-400": status === "ONLINE" },
+          { "bg-zinc-500": status === "OFFLINE" },
+          { "bg-sky-700": status === "IDLE" },
           !showStatus && "hidden",
         )}`}
       ></span>
@@ -46,7 +49,7 @@ function Avatar({
         <img
           src={src}
           alt="avatar"
-          className="max-w-full object-cover object-center"
+          className="aspect-square max-w-full overflow-hidden rounded-full object-cover object-center"
         />
       )}
     </button>

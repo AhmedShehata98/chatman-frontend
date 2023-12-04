@@ -4,8 +4,10 @@ import RegisterPage from "../pages/RegisterPage";
 import AppRoot from "../pages/AppRoot";
 import ChatPage from "../pages/ChatPage";
 import CallPage from "../pages/CallPage";
+import ChatRoom from "../pages/ChatRoom";
+import { userConversations } from "../services/conversation.api";
 // import { getAllRooms } from "../services/chat.api";
-// import Cookies from "js-cookie";
+import Cookies from "js-cookie";
 
 export const router = createBrowserRouter([
   {
@@ -17,9 +19,16 @@ export const router = createBrowserRouter([
     element: <AppRoot />,
     children: [
       {
-        index: true,
+        path: ROUTES_LIST.chatRoom,
         element: <ChatPage />,
-        // loader: Cookies.get("token") ? getAllRooms : undefined,
+        loader: () => userConversations(Cookies.get("token")),
+        errorElement: <RegisterPage />,
+        children: [
+          {
+            path: `${ROUTES_LIST.chatRoom}/:roomId`,
+            element: <ChatRoom />,
+          },
+        ],
       },
       {
         path: ROUTES_LIST.call,

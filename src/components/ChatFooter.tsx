@@ -1,9 +1,17 @@
-import { ReactNode, FormEvent, useEffect, useState, ChangeEvent } from "react";
+import {
+  ReactNode,
+  FormEvent,
+  useEffect,
+  useState,
+  ChangeEvent,
+  useRef,
+} from "react";
 import { chatManWebSocket } from "../services/ws";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { conversationAtom } from "../atoms/conversation.atom";
 import { authStateAtom } from "../atoms/login.atom";
 import { messagesAtom } from "../atoms/messages.atom";
+import { wsEventsKeys } from "../constants/wsConstants";
 
 type Props = {
   emojiButton?: ReactNode;
@@ -17,8 +25,8 @@ function ChatFooter({
   emojiButton,
   messageInput,
   sendButton,
-  voiceButton,
-}: Props) {
+} // voiceButton,
+: Props) {
   const targetRoom = useRecoilValue(conversationAtom);
   const { user: me } = useRecoilValue(authStateAtom);
   const setMessagesAtom = useSetRecoilState(messagesAtom);
@@ -27,21 +35,17 @@ function ChatFooter({
     setMessagesAtom((currMsg) => [...currMsg, message]);
   };
 
-  function sendMessage({
-    message,
-    senderId,
-    conversationId,
-  }: {
+  function sendMessage(messageData: {
     conversationId: string;
-    senderId: string;
+    sender: string;
     message: string;
+    media?: string;
   }) {
-    chatManWebSocket.emit("message", {
-      conversationId,
-      senderId,
-      message,
+    chatManWebSocket.emit(wsEventsKeys.message, {
+      createdAt: Date.now(),
+      ...messageData,
     });
-    chatManWebSocket.off("message");
+    chatManWebSocket.off(wsEventsKeys.message);
   }
   const handleSubmit = (ev: FormEvent<HTMLFormElement>) => {
     const target = ev.target as HTMLFormElement;
@@ -54,8 +58,8 @@ function ChatFooter({
     if (me === null) throw new Error(`expected user id but got: ${targetRoom}`);
 
     sendMessage({
-      conversationId: targetRoom.conversation._id as string,
-      senderId: me._id,
+      conversationId: targetRoom._id as string,
+      sender: me._id,
       message: textMessage,
     });
 
@@ -63,9 +67,9 @@ function ChatFooter({
   };
 
   useEffect(() => {
-    chatManWebSocket.on("incoming-message", handleIncomingMessage);
+    chatManWebSocket.on(wsEventsKeys.incomingMessage, handleIncomingMessage);
     return () => {
-      chatManWebSocket.off("incoming-message");
+      chatManWebSocket.off(wsEventsKeys.incomingMessage);
     };
   }, [handleIncomingMessage, chatManWebSocket]);
 
@@ -130,28 +134,43 @@ const VoiceButton = () => {
   );
 };
 const MessageInput = () => {
-  const [textMessage, setTextMessage] = useState("");
+  const { user: me } = useRecoilValue(authStateAtom);
   const conversation = useRecoilValue(conversationAtom);
-  const handleChange = (ev: ChangeEvent<HTMLInputElement>) => {
+  const timeOutRef = useRef(0);
+  const [textMessage, setTextMessage] = useState("");
+
+  function handleChange(ev: ChangeEvent<HTMLInputElement>) {
     setTextMessage(ev.target.value);
-    chatManWebSocket.emit("typing", {
-      conversationId: conversation?.conversation._id,
+    chatManWebSocket.emit(wsEventsKeys.typing, {
+      fullName: me?.fullName,
+      conversationId: conversation?._id,
+      isTyping: true,
     });
-  };
-  const handleStopTyping = () => {
-    chatManWebSocket.off("typing");
-  };
+  }
+  function handleKeyUp() {
+    timeOutRef.current = +setTimeout(() => {
+      chatManWebSocket.emit(wsEventsKeys.finishTyping, {
+        conversationId: conversation?._id,
+        isTyping: false,
+      });
+    }, 1000);
+  }
+  useEffect(() => {
+    if (timeOutRef.current !== 0) {
+      clearTimeout(timeOutRef.current);
+    }
+  }, [timeOutRef.current]);
 
   return (
     <input
       type="text"
       name="text-message"
       id="text-message"
+      value={textMessage}
+      onChange={handleChange}
+      onKeyUp={handleKeyUp}
       autoComplete="off"
       placeholder="type a message"
-      onChange={handleChange}
-      onKeyUp={handleStopTyping}
-      value={textMessage}
       className="grow rounded-md bg-inherit px-3 py-3 text-lg text-white caret-slate-400 placeholder:capitalize focus:outline-none focus:brightness-150"
     />
   );

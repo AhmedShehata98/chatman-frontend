@@ -1,6 +1,5 @@
 import {
   ChangeEvent,
-  MouseEvent,
   MouseEventHandler,
   useDeferredValue,
   useEffect,
@@ -9,10 +8,10 @@ import {
 import { searchUsers } from "../services/auth.api";
 import Avatar from "./Avatar";
 import clsx from "clsx";
-import { chatManWebSocket } from "../services/ws";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRecoilValue } from "recoil";
 import { authStateAtom } from "../atoms/login.atom";
-import { useQueryClient } from "@tanstack/react-query";
+import { createConversation } from "../services/conversation.api";
 
 type Props = {
   title: string;
@@ -21,48 +20,35 @@ type Props = {
 };
 function UsersMenuHeader({ onCreateNewChat, onFilter, title }: Props) {
   const [query, setQuery] = useState("");
+  const { user } = useRecoilValue(authStateAtom);
   const queryClient = useQueryClient();
   const deferredQuery = useDeferredValue(query);
-  const { user: me } = useRecoilValue(authStateAtom);
+  const { mutateAsync: mutateCreateConversation } = useMutation({
+    mutationFn: (conversationData: CreateConversation) =>
+      createConversation(conversationData),
+    mutationKey: ["conversation"],
+  });
 
-  const [usersList, setUsersList] = useState<User[] | null>(null);
+  const [usersList, setUsersList] = useState<SearchResult[] | null>(null);
   function handleGetUserSearchQuery(ev: ChangeEvent) {
     const target = ev.target as HTMLInputElement;
     setQuery(target.value);
   }
-  function joinRoom(receiver: User, cb: (data: any) => void) {
-    if (receiver === null)
-      throw new Error(`expected receiver id but received:${receiver}`);
-    if (me === null) throw new Error(`expected my but received id:${receiver}`);
-    const participants = {
-      sender: me?._id,
-      receiver: receiver._id,
-    };
-    if (receiver) {
-      chatManWebSocket.emit("join-room", {
-        participants,
-        roomId: null,
-      });
-      chatManWebSocket.on("room-created", (data) => {
-        cb(data);
-      });
-    }
-    chatManWebSocket.off("join-room");
-    chatManWebSocket.off("room-created");
-  }
 
-  function handleChooseUser(receiver: User) {
+  async function handleChooseUser(receiverId: string) {
     setQuery("");
-    joinRoom(receiver, () => {
-      queryClient.invalidateQueries({ queryKey: ["user-data"] });
+    queryClient.invalidateQueries({ queryKey: ["user-data"] });
+    const conversation = await mutateCreateConversation({
+      participants: [receiverId, user?._id as string],
+      conversationType: "PRIVATE",
     });
+    console.log(conversation);
   }
 
   useEffect(() => {
     if (deferredQuery !== "") {
-      searchUsers(deferredQuery).then(({ users }) => {
-        const newUsers = users.filter((user) => user._id !== me?._id);
-        setUsersList(newUsers);
+      searchUsers(deferredQuery).then((users) => {
+        setUsersList(users);
       });
     }
   }, [deferredQuery]);
@@ -120,16 +106,17 @@ function UsersMenuHeader({ onCreateNewChat, onFilter, title }: Props) {
                   <li
                     key={user._id}
                     className="flex w-11/12 cursor-pointer items-center justify-start gap-4 px-4 py-2.5 hover:bg-[#243744]"
-                    onClick={() => handleChooseUser(user)}
+                    onClick={() => handleChooseUser(user._id)}
                   >
-                    <Avatar src={user.profileImg} fullName={user.fullName} />
+                    <Avatar
+                      showStatus={false}
+                      src={user.profilePictureUrl}
+                      fullName={user.fullName}
+                    />
                     <span className="flex flex-col justify-start gap-1">
                       <strong className="text-zinc-100">{`${user.username}`}</strong>
                       <small className="font-semibold capitalize text-zinc-400">
-                        {Intl.DateTimeFormat("en-EG", {
-                          timeStyle: "short",
-                          dateStyle: "medium",
-                        }).format(user.createdAt as any)}
+                        {user.createdAt}
                       </small>
                     </span>
                   </li>

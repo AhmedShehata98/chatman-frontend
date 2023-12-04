@@ -1,9 +1,8 @@
 interface Signup {
   fullName: string;
-  username: string;
   email: string;
   password: string;
-  phone: string;
+  profilePictureUrl?: string;
 }
 
 interface Login {
@@ -16,35 +15,50 @@ interface UserContacts {
   conversation: Conversation;
 }
 
+interface CreateConversation {
+  participants: Array<string>;
+  conversationType: "PRIVATE" | "GROUP";
+  conversationAdmin?: string;
+  conversationName?: string;
+  conversationDescription?: string;
+  conversationImage?: string;
+}
+interface Conversation {
+  participants: User[];
+  conversationType: "PRIVATE" | "GROUP";
+  conversation: Omit<CreateConversation, "participants" | "conversationType">;
+  updatedAt: string;
+  createdAt: string;
+}
 interface User {
   _id: string;
   fullName: string;
   username: string;
   email: string;
   phone: string;
+  updatedAt: string;
   createdAt: string;
-  contacts: Array<UserContacts>;
-  isOnline: boolean;
-  profileImg: string;
+  status: UserStatusType;
+  lastSeenDate: number;
+  userContacts: Array<UserContacts>;
+  userGroups: Array<UserContacts>;
+  profilePictureUrl: string;
 }
+type UserStatusType = "OFFLINE" | "ONLINE" | "IDLE";
 
+interface SearchResult {
+  _id: string;
+  username: string;
+  fullName: string;
+  profilePictureUrl: string;
+  updatedAt: string;
+  createdAt: string;
+}
 interface Conversation {
   _id: string;
   participants: {
-    sender: {
-      _id: string;
-      fullName: string;
-      username: string;
-      profileImg: string;
-      isOnline: boolean;
-    };
-    receiver: {
-      _id: string;
-      fullName: string;
-      username: string;
-      profileImg: string;
-      isOnline: boolean;
-    };
+    sender: Partial<User>;
+    receiver: Partial<User>;
   };
   lastMessage: string;
   createdAt: string;
@@ -52,17 +66,12 @@ interface Conversation {
 }
 
 interface Message {
-  conversation: string;
-  createdAt: string;
-  message: string;
-  updatedAt: string;
-  sender: {
-    _id: string;
-    fullName: string;
-    username: string;
-    isOnline: boolean;
-    profileImg: string;
-  };
   _id: string;
+  conversationId: string;
+  message: string;
+  media: string;
+  sender: Partial<User>;
+  createdAt: string;
+  updatedAt: string;
   __v: number;
 }

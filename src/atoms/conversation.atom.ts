@@ -1,9 +1,6 @@
 import { atom } from "recoil";
 
-export const conversationAtom = atom<{
-  user: Partial<User>;
-  conversation: Conversation;
-} | null>({
+export const conversationAtom = atom<Conversation | null>({
   key: "conversation",
   default: null,
 });

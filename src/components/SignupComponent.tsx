@@ -1,4 +1,4 @@
-import { FormEvent } from "react";
+import { useState, ChangeEvent, FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ROUTES_LIST } from "../router/routes-list";
 import { useMutation } from "@tanstack/react-query";
@@ -6,10 +6,15 @@ import { createAccount, getUserData } from "../services/auth.api";
 import { useSetRecoilState } from "recoil";
 import { authStateAtom } from "../atoms/login.atom";
 import LoadingIndicator from "./LoadingIndicator";
+import { uploadImage } from "../services/upload.api";
+import clsx from "clsx";
 
 function SignUpComponent() {
   const setLoginState = useSetRecoilState(authStateAtom);
   const navigate = useNavigate();
+  const [profileImgPreview, setProfileImgPreview] = useState<null | string>(
+    null,
+  );
   const { isPending, mutateAsync: mutateSignup } = useMutation({
     mutationKey: ["signup"],
     mutationFn: (signupParams: Signup) => createAccount(signupParams),
@@ -18,6 +23,28 @@ function SignUpComponent() {
     mutationKey: ["user-data"],
     mutationFn: (token: string) => getUserData(token),
   });
+  const { isPending: isPendingUploadImg, mutate: uploadProfileImage } =
+    useMutation({
+      mutationKey: ["upload-user-profile-img"],
+      mutationFn: (file: FormData) => uploadImage(file),
+    });
+
+  const handleUploadImage = (ev: ChangeEvent<HTMLInputElement>) => {
+    const files = ev.target.files;
+    const fd = new FormData();
+    if (!files) return;
+    if (files?.length < 1) return;
+    fd.set("file", files[0]);
+
+    uploadProfileImage(fd, {
+      onSuccess: (data) => {
+        setProfileImgPreview(data.secure_url);
+      },
+      onError: (err) => {
+        console.log(err);
+      },
+    });
+  };
 
   const handleSubmit = async (ev: FormEvent<HTMLFormElement>) => {
     ev.preventDefault();
@@ -27,8 +54,7 @@ function SignUpComponent() {
         email: fd.get("email") as string,
         fullName: fd.get("fullName") as string,
         password: fd.get("password") as string,
-        phone: fd.get("phone") as string,
-        username: `@${fd.get("username")}`,
+        profilePictureUrl: profileImgPreview as string,
       });
 
       if (signupData) {
@@ -36,9 +62,9 @@ function SignUpComponent() {
         setLoginState({
           isLoggedIn: true,
           token: signupData.token,
-          user: user.data,
+          user: user,
         });
-        navigate(ROUTES_LIST.app);
+        navigate(ROUTES_LIST.chatRoom);
       }
     } catch (error: any) {
       throw new Error(error.message);
@@ -51,9 +77,48 @@ function SignUpComponent() {
       action=""
       className="flex w-full flex-col rounded-md bg-white px-16 py-4 shadow-lg"
     >
-      <h3 className="mb-6 mt-12 text-lg font-semibold capitalize text-zinc-600">
-        please fill login information
+      <h3 className="mb-6 mt-6 text-lg font-semibold capitalize text-zinc-500">
+        fill your information and create your account
       </h3>
+      <span className="my-4 flex h-32 w-32 items-center justify-center self-center overflow-hidden rounded-full bg-zinc-200">
+        <input
+          hidden
+          type="file"
+          onChange={handleUploadImage}
+          name="profileImageUrl"
+          id="profileImage"
+        />
+        <img
+          src={profileImgPreview!}
+          alt="profile"
+          className={`${clsx(
+            profileImgPreview ? "flex" : "hidden",
+          )} aspect-square max-w-full items-center justify-center rounded-full border-4 border-zinc-700 object-cover object-center`}
+        />
+        <label
+          htmlFor="profileImage"
+          className={`${clsx(
+            profileImgPreview ? "hidden" : "flex",
+          )} cursor-pointer items-center justify-center text-4xl text-[#017561] hover:brightness-150`}
+        >
+          <span
+            className={`${clsx(
+              isPendingUploadImg
+                ? "pointer-events-none inline-block"
+                : "hidden",
+            )} animate-spin`}
+          >
+            <i className="fi fi-rr-spinner"></i>
+          </span>
+          <span
+            className={`${clsx(
+              isPendingUploadImg ? "hidden" : false,
+            )}inline-block h-full w-full`}
+          >
+            <i className="fi fi-rr-user-add"></i>
+          </span>
+        </label>
+      </span>
       <input
         type="text"
         name="fullName"
@@ -62,24 +127,10 @@ function SignUpComponent() {
         className="mb-5 w-full rounded-md border-2 bg-[#f9f9fa] px-6 py-4 shadow-sm focus:border-[#00A884] focus:outline-none"
       />
       <input
-        type="text"
-        name="username"
-        id="username"
-        placeholder="username..."
-        className="mb-5 w-full rounded-md border-2 bg-[#f9f9fa] px-6 py-4 shadow-sm focus:border-[#00A884] focus:outline-none"
-      />
-      <input
         type="email"
         name="email"
         id="email"
         placeholder="email address..."
-        className="mb-5 w-full rounded-md border-2 bg-[#f9f9fa] px-6 py-4 shadow-sm focus:border-[#00A884] focus:outline-none"
-      />
-      <input
-        type="tel"
-        name="phone"
-        id="phone"
-        placeholder="phone number..."
         className="mb-5 w-full rounded-md border-2 bg-[#f9f9fa] px-6 py-4 shadow-sm focus:border-[#00A884] focus:outline-none"
       />
       <input

@@ -1,11 +1,11 @@
 import { CHATMAN_PRIVATE_API, ENDPOINTS } from "./api";
 
-export async function getConversationMessages(
-  conversationId: string,
-): Promise<Message[]> {
+export async function uploadImage(file: FormData) {
   try {
     const { data } = await CHATMAN_PRIVATE_API({
-      url: `${ENDPOINTS.messages}/${conversationId}`,
+      method: "POST",
+      url: ENDPOINTS.uploadImage,
+      data: file,
     });
     return data;
   } catch (error) {

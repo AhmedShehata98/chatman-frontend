@@ -13,9 +13,9 @@ function MessageCard({ message, me }: { message: Message; me: User | null }) {
     >
       <Avatar
         showStatus
-        isOnline={message.sender.isOnline}
-        src={null}
-        fullName={message.sender.fullName}
+        status={message.sender.status}
+        src={message.sender.profilePictureUrl || null}
+        fullName={message.sender.fullName || "NA-NA"}
       />
       <span
         className={`${clsx(

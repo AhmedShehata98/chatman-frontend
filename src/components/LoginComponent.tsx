@@ -12,7 +12,7 @@ function LoginComponent() {
   const navigate = useNavigate();
   const { isPending, mutateAsync } = useMutation({
     mutationKey: ["login"],
-    mutationFn: (signupParams: Login) => login(signupParams),
+    mutationFn: (loginParams: Login) => login(loginParams),
   });
 
   const { mutate: mutateGetUserInfo } = useMutation({
@@ -31,7 +31,7 @@ function LoginComponent() {
       });
       if (loginData) {
         mutateGetUserInfo(loginData.token, {
-          onSuccess: function ({ data }) {
+          onSuccess: function (data) {
             setLoginState({
               isLoggedIn: true,
               token: loginData.token,
@@ -40,8 +40,7 @@ function LoginComponent() {
             if (!data) {
               throw new Error(`received data :${data}`);
             }
-            navigate(ROUTES_LIST.app);
-            console.log(loginData, data);
+            navigate(ROUTES_LIST.chatRoom);
           },
           onError: function (err) {
             console.log(err);

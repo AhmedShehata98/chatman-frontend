@@ -1,7 +1,5 @@
 import clsx from "clsx";
-import { ReactNode } from "react";
 import { useRecoilValue } from "recoil";
-import Avatar from "./Avatar";
 import { authStateAtom } from "../atoms/login.atom";
 import useGetChatMessages from "../hooks/useGetChatMessages";
 import { conversationAtom } from "../atoms/conversation.atom";
@@ -11,7 +9,7 @@ function ChatBody() {
   const targetConversation = useRecoilValue(conversationAtom);
   const { isLoadingChatsMessages, isFetchedChatsMessages, chatMessages } =
     useGetChatMessages({
-      conversationId: targetConversation?.conversation._id as string,
+      conversationId: targetConversation?._id as string,
     });
   const { user: me } = useRecoilValue(authStateAtom);
 

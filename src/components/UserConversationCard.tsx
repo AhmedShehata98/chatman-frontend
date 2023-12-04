@@ -8,7 +8,7 @@ function UserConversationCard({ onClick, children }: Props) {
   return (
     <li
       onClick={onClick}
-      className="group flex w-full cursor-pointer items-center justify-start gap-4 rounded-md px-3 py-4 shadow-md hover:bg-gray-700"
+      className="group flex w-full cursor-pointer items-center justify-start gap-4 rounded-md bg-opacity-40 px-3 py-4 shadow-md hover:bg-gray-800"
     >
       {children}
     </li>

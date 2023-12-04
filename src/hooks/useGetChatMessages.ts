@@ -22,7 +22,7 @@ function useGetChatMessages({ conversationId }: { conversationId: string }) {
   }
   useEffect(() => {
     if (isFetchedChatsMessages && data) {
-      setChatMessages(data?.messagesList);
+      setChatMessages(data);
     }
   }, [data, isFetchedChatsMessages, isLoadingChatsMessages]);
 

@@ -7,14 +7,15 @@ import { authStateAtom } from "../atoms/login.atom";
 function SideMenu() {
   const { pathname } = useLocation();
   const { user } = useRecoilValue(authStateAtom);
+
   return (
     <aside className="flex h-[calc(100dvh-60px)] items-start justify-start">
       <article className="flex h-full flex-col bg-[#202C33]">
         <ul className="grid grid-flow-row gap-2 p-1.5">
           <Link
-            to={ROUTES_LIST.app}
+            to={ROUTES_LIST.chatRoom}
             className={
-              pathname === "/"
+              pathname === ROUTES_LIST.chatRoom
                 ? "relative flex h-12 w-12 cursor-pointer items-center justify-center rounded-md bg-zinc-600 shadow-md after:absolute after:left-0 after:top-1/2 after:h-1/2 after:w-1.5 after:-translate-y-1/2 after:rounded-2xl after:bg-[#00A884] after:content-['']"
                 : "relative flex h-12 w-12 cursor-pointer items-center justify-center rounded-md shadow-md hover:bg-zinc-700"
             }
@@ -46,10 +47,10 @@ function SideMenu() {
             </span>
           </button>
           <Avatar
-            isOnline={user?.isOnline}
+            status={user?.status || "OFFLINE"}
             showStatus
             fullName={user?.fullName as string}
-            src={null}
+            src={user?.profilePictureUrl || null}
           />
         </ul>
       </article>

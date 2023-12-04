@@ -1,14 +1,16 @@
 import axios from "axios";
 import Cookies from "js-cookie";
 
-const baseURL = "http://127.0.0.1:7000";
+const baseURL = "http://127.0.0.1:3000";
 export const ENDPOINTS = {
   signup: "/api/user/signup",
   login: "/api/user/login",
-  userData: "/api/user/info",
+  userData: "/api/user/me",
+  sessionStatus: "/api/user/session-status",
   searchUsers: "/api/user/search",
-  chatRooms: "/api/chat/rooms",
-  messages: "/api/messages",
+  conversation: "/api/conversation",
+  messages: "/api/message",
+  uploadImage: "/api/upload/img",
 };
 export const CHATMAN_API = axios.create({
   baseURL: undefined,

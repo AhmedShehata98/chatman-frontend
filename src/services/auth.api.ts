@@ -38,9 +38,7 @@ export async function login(
     throw error;
   }
 }
-export async function getUserData(
-  token: string,
-): Promise<{ message: string; data: User }> {
+export async function getUserData(token: string): Promise<User> {
   try {
     const { data } = await CHATMAN_PRIVATE_API({
       method: "GET",
@@ -54,13 +52,29 @@ export async function getUserData(
     throw error;
   }
 }
-export async function searchUsers(
-  query: string,
-): Promise<{ message: string; users: User[] }> {
+export async function searchUsers(query: string): Promise<SearchResult[]> {
   try {
     const { data } = await CHATMAN_PRIVATE_API({
       method: "GET",
       url: `${ENDPOINTS.searchUsers}?q=${query}`,
+    });
+    return data;
+  } catch (error) {
+    throw error;
+  }
+}
+export async function changeSessionStatus({
+  lastSeenDate,
+  status,
+}: {
+  lastSeenDate: number;
+  status: UserStatusType;
+}) {
+  try {
+    const { data } = await CHATMAN_PRIVATE_API({
+      method: "PUT",
+      url: `${ENDPOINTS.sessionStatus}`,
+      data: { lastSeenDate, status },
     });
     return data;
   } catch (error) {
