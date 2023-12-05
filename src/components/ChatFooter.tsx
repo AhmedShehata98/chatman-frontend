@@ -99,7 +99,7 @@ function ChatFooter({
   return (
     <form
       onSubmit={handleSubmit}
-      className="relative z-10 flex h-[65px] w-full items-center justify-start gap-4 bg-primary-100 px-3 py-2 max-lg:gap-2"
+      className="relative z-10 flex h-[65px] w-full max-w-full items-center justify-start gap-4 bg-primary-100 px-3 py-2 max-lg:gap-2"
     >
       <button
         type="button"
@@ -154,7 +154,7 @@ const SendButton = () => {
   return (
     <button
       type="submit"
-      className="flex aspect-square w-12 items-center justify-center rounded-full bg-secondary-100 text-2xl text-black hover:bg-secondary-200 hover:bg-opacity-60 hover:text-zinc-300 max-lg:text-lg"
+      className="flex aspect-square w-12 items-center justify-center rounded-full bg-secondary-100 text-2xl text-black hover:bg-secondary-200 hover:bg-opacity-60 hover:text-zinc-300 max-lg:text-lg max-md:w-10"
     >
       <i className="fi fi-rr-paper-plane-top inline-block -rotate-45 transition-transform hover:-translate-y-2 hover:translate-x-2"></i>
     </button>
@@ -212,7 +212,7 @@ const MessageInput = () => {
       onKeyUp={handleKeyUp}
       autoComplete="off"
       placeholder="type a message"
-      className="flex-grow rounded-md bg-inherit px-3 py-2 text-lg text-white caret-slate-400 placeholder:capitalize focus:outline-none focus:brightness-150"
+      className="flex-grow rounded-md border border-primary-200 bg-inherit bg-primary-200 px-3 py-2 text-lg text-white caret-slate-400 placeholder:capitalize focus:outline-none focus:brightness-150"
     />
   );
 };

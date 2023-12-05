@@ -8,7 +8,7 @@ function UserTyping({ username }: { username: string }) {
         <div className="typing__dot"></div>
         <div className="typing__dot"></div>
       </div>
-      <p className="text-sm capitalize text-zinc-400">
+      <p className="max-w-full truncate text-sm capitalize text-zinc-400 max-md:text-xs">
         {username} is typing message ..
       </p>
     </div>

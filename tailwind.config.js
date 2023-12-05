@@ -15,6 +15,7 @@ export default {
         },
       },
       height: {
+        "dynamic-screen": "100dvh",
         "app-height": "calc(100dvh - 70px)",
       },
     },

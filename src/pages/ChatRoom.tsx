@@ -14,7 +14,7 @@ function ChatRoom() {
       style={{ backgroundImage: `url(${background})` }}
       className="chat-room"
     >
-      <div className="relative h-[100dvh] w-full">
+      <div className="h-dynamic-screen relative w-full max-w-full">
         <ChatHeader
           userLabel={
             <ChatHeader.UserLabel

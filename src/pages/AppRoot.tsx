@@ -1,7 +1,7 @@
 import { useRecoilState } from "recoil";
 import { authStateAtom } from "../atoms/login.atom";
 import { useEffect } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useNavigate, useNavigation } from "react-router-dom";
 import { ROUTES_LIST } from "../router/routes-list";
 import MainLayout from "../layout/MainLayout";
 import { useMutation } from "@tanstack/react-query";
@@ -9,9 +9,11 @@ import { changeSessionStatus, getUserData } from "../services/auth.api";
 import Cookies from "js-cookie";
 import { chatManWebSocket } from "../services/ws";
 import { wsEventsKeys } from "../constants/wsConstants";
+import AppLoadingIndicator from "../components/AppLoadingIndicator";
 
 const AppRoot = () => {
   const [_, setAuthState] = useRecoilState(authStateAtom);
+  const { state } = useNavigation();
   const navigator = useNavigate();
   const { mutate } = useMutation({
     mutationKey: ["user-data"],
@@ -82,6 +84,9 @@ const AppRoot = () => {
     };
   }, [Cookies.get("token")]);
 
+  if (state === "loading") {
+    return <AppLoadingIndicator />;
+  }
   return (
     <MainLayout>
       <Outlet />

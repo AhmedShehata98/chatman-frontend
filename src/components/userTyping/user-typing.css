@@ -2,6 +2,9 @@
   width: fit-content;
   height: fit-content;
   position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   padding: 6px 0px;
   margin-left: 5px;
   background: transparent;
@@ -9,10 +12,9 @@
 }
 
 .typing__dot {
-  float: left;
   width: 6px;
   height: 14px;
-  margin: 0 4px;
+  gap: 4px;
   background: #00a884;
   border-radius: 2px;
   opacity: 0;
@@ -30,7 +32,16 @@
 .typing__dot:nth-child(3) {
   animation-delay: 0.4s;
 }
-
+@media (max-width: 768px) {
+  .typing {
+    padding: 3px 0px;
+    gap: 3px;
+  }
+  .typing__dot {
+    width: 4px;
+    height: 10px;
+  }
+}
 @keyframes loadingFade {
   0% {
     opacity: 0;

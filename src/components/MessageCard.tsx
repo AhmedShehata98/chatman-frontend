@@ -16,6 +16,7 @@ function MessageCard({ message, me }: { message: Message; me: User | null }) {
         status={message.sender.status}
         src={message.sender.profilePictureUrl || null}
         fullName={message.sender.fullName || "NA-NA"}
+        className="max-md:h-10 max-md:w-10"
       />
       <span
         className={`${clsx(
