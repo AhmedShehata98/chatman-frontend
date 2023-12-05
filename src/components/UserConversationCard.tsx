@@ -17,10 +17,18 @@ UserConversationCard.UserChatDate = UserChatDate;
 UserConversationCard.userName = UserName;
 
 function UserName({ fullName }: { fullName: string }) {
-  return <p className="font-semibold capitalize text-white ">{fullName}</p>;
+  return (
+    <p className="inline-block max-w-[10rem] overflow-hidden truncate font-semibold capitalize text-white max-md:max-w-[6rem]">
+      {fullName}
+    </p>
+  );
 }
 function UserChatDate({ messageDate }: { messageDate: string }) {
-  return <small className="font-semibold text-zinc-400">{messageDate}</small>;
+  return (
+    <small className="inline-block max-w-[7rem] overflow-hidden truncate font-semibold text-zinc-400">
+      {messageDate}
+    </small>
+  );
 }
 function UserAvatar({ img }: { img: string }) {
   return (

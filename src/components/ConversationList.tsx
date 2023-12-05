@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { ROUTES_LIST } from "../router/routes-list";
 import { useSetRecoilState } from "recoil";
 import { conversationAtom } from "../atoms/conversation.atom";
+import { useCallback } from "react";
 
 type Props = {
   conversationData: Conversation[];
@@ -31,6 +32,20 @@ function ConversationList({ conversationData, userId }: Props) {
     setConversationData(conversation);
   };
 
+  const formatDate = useCallback(
+    (date: string) => {
+      if (date) {
+        return Intl.DateTimeFormat("en-EG", {
+          dateStyle: "medium",
+          timeStyle: "short",
+        }).format(new Date(date));
+      } else {
+        return date;
+      }
+    },
+    [conversationData],
+  );
+
   return (
     <ul className="conversation-list">
       {conversationData?.map((conversation) => {
@@ -55,7 +70,7 @@ function ConversationList({ conversationData, userId }: Props) {
                 conversation.participants?.[userTargetIdx].fullName || "N A"
               }
             />
-            <div className="flex max-w-[calc(100%-6rem)] flex-grow flex-col items-start justify-start gap-2">
+            <div className="flex  flex-grow flex-col items-start justify-start gap-2">
               <span className="flex w-full items-center justify-between gap-2">
                 <UserConversationCard.userName
                   fullName={
@@ -68,7 +83,7 @@ function ConversationList({ conversationData, userId }: Props) {
                 />
               </span>
               <UserConversationCard.LastMessage
-                lastMessage={conversation?.lastMessage || "NA-NA"}
+                lastMessage={formatDate(conversation?.lastMessage) || "NA-NA"}
               />
             </div>
           </UserConversationCard>

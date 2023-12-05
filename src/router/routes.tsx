@@ -26,7 +26,6 @@ export const router = createBrowserRouter([
         path: ROUTES_LIST.chatRoom,
         element: <ChatPage />,
         loader: () => userConversations(Cookies.get("token")),
-        errorElement: <RegisterPage />,
         children: [
           {
             path: `${ROUTES_LIST.chatRoom}/:roomId`,
