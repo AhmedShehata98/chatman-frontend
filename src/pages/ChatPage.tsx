@@ -5,9 +5,6 @@ import { useRecoilValue } from "recoil";
 import { authStateAtom } from "../atoms/login.atom";
 import { useQuery } from "@tanstack/react-query";
 import { userConversations } from "../services/conversation.api";
-import { useEffect } from "react";
-import { chatManWebSocket } from "../services/ws";
-import { wsEventsKeys } from "../constants/wsConstants";
 
 const ChatPage = () => {
   const { user: me, token } = useRecoilValue(authStateAtom);
@@ -15,7 +12,6 @@ const ChatPage = () => {
     data: conversationData,
     isFetched: isFetchedConversationData,
     isLoading: isLoadingConversationData,
-    refetch: refetchConversationData,
   } = useQuery({
     queryKey: ["conversation", token],
     queryFn: () => userConversations(token as string),
