@@ -5,7 +5,7 @@ function MessageCard({ message, me }: { message: Message; me: User | null }) {
   return (
     <li
       key={message._id}
-      className={`flex max-w-[70%] items-start justify-end gap-3 ${clsx(
+      className={`flex max-w-[70%] items-start justify-end gap-3 max-md:max-w-full max-md:justify-start ${clsx(
         message.sender._id !== me?._id
           ? "flex-row-reverse self-end"
           : "self-start",
@@ -22,10 +22,12 @@ function MessageCard({ message, me }: { message: Message; me: User | null }) {
           message.sender._id !== me?._id
             ? "bg-primary-300 after:-right-[0.80rem] after:border-b-transparent after:border-l-transparent after:border-r-transparent after:border-t-primary-300"
             : "bg-secondary-200 after:-left-[0.80rem] after:border-b-transparent after:border-l-transparent after:border-l-transparent after:border-r-transparent after:border-t-secondary-200",
-        )} relative mx-5 mt-2 flex flex-col content-end items-end justify-end gap-2 rounded-md p-4 after:absolute after:top-0 after:h-6 after:w-6 after:border-[1rem] after:content-['']`}
+        )} relative mx-5 mt-2 flex w-[calc(100%-6.5rem)] max-w-[calc(100%-6.5rem)] flex-col content-end items-end justify-end gap-2 overflow-hidden rounded-md p-4 after:absolute after:top-0 after:h-6 after:w-6 after:border-[1rem] after:content-[''] max-md:me-2 max-md:ms-4`}
       >
-        <p className="max-w-full text-white">{message.message}</p>
-        <small className="font-semibold text-zinc-400">
+        <p className="inline-block max-w-full break-words text-white">
+          {message.message}
+        </p>
+        <small className="font-semibold text-zinc-400 max-md:text-xs">
           {Intl.DateTimeFormat("en-EG", {
             dateStyle: "long",
             timeStyle: "short",

@@ -26,7 +26,7 @@ function ChatBody() {
   return (
     <div
       ref={messagesWrapperRef}
-      className="flex h-[calc(100dvh-65px-85px)] max-h-[100dvh] w-full flex-grow flex-col gap-7 overflow-y-auto px-6 py-5 "
+      className="flex h-[calc(100dvh-65px-85px)] max-h-[100dvh] w-full flex-grow flex-col gap-7 overflow-y-auto px-6 py-5 max-md:px-3"
     >
       <ul
         className={`${clsx(

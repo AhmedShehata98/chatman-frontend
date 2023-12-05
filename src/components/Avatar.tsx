@@ -29,7 +29,7 @@ function Avatar({
     <button
       type="button"
       onClick={onClick}
-      className={`relative flex h-12 w-12 items-center justify-center rounded-full border-2 ${clsx(
+      className={`relative flex aspect-square h-12 w-12 items-center justify-center rounded-full border-2 ${clsx(
         className,
       )}`}
     >

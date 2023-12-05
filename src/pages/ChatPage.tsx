@@ -23,17 +23,6 @@ const ChatPage = () => {
     enabled: token !== null,
   });
 
-  useEffect(() => {
-    chatManWebSocket.on(wsEventsKeys.createdConversation, (_conversationId) => {
-      refetchConversationData();
-    });
-    console.log("first conversation");
-
-    return () => {
-      chatManWebSocket.off(wsEventsKeys.createdConversation);
-    };
-  }, [chatManWebSocket]);
-
   return (
     <ChatLayout
       conversationElement={

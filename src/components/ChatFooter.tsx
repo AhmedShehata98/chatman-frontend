@@ -1,10 +1,18 @@
-import { ReactNode, FormEvent, useEffect, ChangeEvent, useRef } from "react";
+import {
+  ReactNode,
+  FormEvent,
+  useEffect,
+  ChangeEvent,
+  useRef,
+  useState,
+} from "react";
 import { chatManWebSocket } from "../services/ws";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { conversationAtom } from "../atoms/conversation.atom";
 import { authStateAtom } from "../atoms/login.atom";
 import { messageContentAtom, messagesAtom } from "../atoms/messages.atom";
 import { wsEventsKeys } from "../constants/wsConstants";
+import clsx from "clsx";
 
 type Props = {
   emojiButton?: ReactNode;
@@ -20,6 +28,8 @@ function ChatFooter({
   sendButton, // voiceButton,
 }: Props) {
   const targetRoom = useRecoilValue(conversationAtom);
+  const moreMessageOptionsRef = useRef<HTMLDivElement | null>(null);
+  const [showMoreMessageOptions, setShowMoreMessageOptions] = useState(false);
   const { user: me } = useRecoilValue(authStateAtom);
   const [messageContent, setMessageContent] =
     useRecoilState(messageContentAtom);
@@ -67,12 +77,45 @@ function ChatFooter({
     };
   }, [handleIncomingMessage, chatManWebSocket]);
 
+  useEffect(() => {
+    const handleCloseMenu = (ev: MouseEvent) => {
+      const target = ev.target as HTMLElement;
+      const bounds = moreMessageOptionsRef.current?.getBoundingClientRect();
+      if (!bounds || !target) return;
+      if (
+        target.clientWidth > bounds.x ||
+        target.clientWidth < bounds.x ||
+        target.clientHeight < bounds.y ||
+        target.clientHeight > bounds.y
+      ) {
+        setShowMoreMessageOptions(false);
+      }
+    };
+    document.addEventListener("mousedown", handleCloseMenu);
+    return () => {
+      document.removeEventListener("mousedown", handleCloseMenu);
+    };
+  }, []);
   return (
     <form
       onSubmit={handleSubmit}
-      className="z-10 flex h-[65px] w-full items-center justify-start gap-4 bg-primary-100 px-3 py-2 max-lg:gap-2"
+      className="relative z-10 flex h-[65px] w-full items-center justify-start gap-4 bg-primary-100 px-3 py-2 max-lg:gap-2"
     >
-      <div className="flex items-center justify-center gap-3">
+      <button
+        type="button"
+        onClick={() => setShowMoreMessageOptions((p) => !p)}
+        className="rounded-md bg-slate-600 px-3 py-1.5 text-2xl text-white hover:text-secondary-100 focus:text-secondary-100 md:hidden"
+      >
+        <i className="fi fi-rr-apps-add"></i>
+      </button>
+      <div
+        ref={moreMessageOptionsRef}
+        className={`flex items-center justify-center gap-3 rounded-md bg-inherit transition-transform duration-500 max-md:absolute max-md:-top-16 max-md:left-4 ${clsx(
+          showMoreMessageOptions
+            ? "max-md:translate-y-0 max-md:opacity-100"
+            : "max-md:translate-y-6 max-md:opacity-0",
+        )}`}
+      >
         {emojiButton}
         {attachmentButton}
       </div>

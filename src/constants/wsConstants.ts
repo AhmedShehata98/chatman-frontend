@@ -8,5 +8,4 @@ export const wsEventsKeys = {
   changeUserStatus: "CHANGE_USER_STATUS",
   startSession: "START_SESSION",
   leaveSession: "LEAVE_SESSION",
-  createdConversation: "CREATED_CONVERSATION",
 };

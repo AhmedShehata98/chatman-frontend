@@ -40,11 +40,18 @@ function UsersMenuHeader({ onCreateNewChat, onFilter, title }: Props) {
 
   async function handleChooseUser(receiverId: string) {
     setQuery("");
-    queryClient.invalidateQueries({ queryKey: ["user-data"] });
-    await mutateCreateConversation({
-      participants: [receiverId, user?._id as string],
-      conversationType: "PRIVATE",
-    });
+    await mutateCreateConversation(
+      {
+        participants: [receiverId, user?._id as string],
+        conversationType: "PRIVATE",
+      },
+      {
+        onSuccess: (data) => {
+          queryClient.invalidateQueries({ queryKey: ["conversation"] });
+          console.log(data);
+        },
+      },
+    );
   }
 
   useEffect(() => {
