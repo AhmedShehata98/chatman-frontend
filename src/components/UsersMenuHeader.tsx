@@ -108,12 +108,16 @@ function UsersMenuHeader({ onCreateNewChat, onFilter, title }: Props) {
             {
               hidden: query === "",
             },
-          )} absolute left-0 top-full flex h-max max-h-[35dvh] w-full flex-col items-start justify-start gap-5 bg-[#18252e] p-6`}
+          )} absolute left-0 top-full z-20 flex h-max max-h-[35dvh] w-full flex-col items-start justify-start gap-5 bg-[#18252e] p-6`}
         >
           <h4 className="px-3 pb-2 font-bold uppercase text-zinc-300">
             available contacts :
           </h4>
-          <ul className="-my-3 flex w-full flex-col items-start justify-center gap-3 overflow-y-auto">
+          <ul
+            className={`-my-3 flex w-full flex-col items-start justify-center gap-3 overflow-y-auto ${clsx(
+              usersList && usersList.length >= 4 ? "pt-24" : "py-1.5",
+            )}`}
+          >
             {query !== "" && usersList !== null
               ? usersList?.map((user) => (
                   <li

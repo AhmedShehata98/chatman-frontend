@@ -20,10 +20,7 @@ function ChatLayout({
             console.log("create chat");
           }}
         />
-        <div className="mt-4 max-h-full w-full flex-grow overflow-y-auto px-6 max-md:px-3">
-          <h3 className="px-3xl mb-5 px-3 text-3xl font-semibold capitalize text-white max-md:text-xl">
-            conversation
-          </h3>
+        <div className="mt-4 flex max-h-full w-full flex-grow flex-col justify-start overflow-y-auto px-6 max-md:px-3">
           {conversationElement}
         </div>
       </div>

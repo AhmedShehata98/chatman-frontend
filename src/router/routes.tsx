@@ -5,8 +5,6 @@ import AppRoot from "../pages/AppRoot";
 import ChatPage from "../pages/ChatPage";
 import CallPage from "../pages/CallPage";
 import ChatRoom from "../pages/ChatRoom";
-import { userConversations } from "../services/conversation.api";
-// import { getAllRooms } from "../services/chat.api";
 import Cookies from "js-cookie";
 import Settings from "../pages/Settings";
 import Profile from "../pages/Profile";
@@ -25,7 +23,6 @@ export const router = createBrowserRouter([
       {
         path: ROUTES_LIST.chatRoom,
         element: <ChatPage />,
-        loader: () => userConversations(Cookies.get("token")),
         children: [
           {
             path: `${ROUTES_LIST.chatRoom}/:roomId`,
