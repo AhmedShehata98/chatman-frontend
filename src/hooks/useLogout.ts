@@ -1,4 +1,3 @@
-import React from "react";
 import { useSetRecoilState } from "recoil";
 import { authStateAtom } from "../atoms/login.atom";
 import cookie from "js-cookie";
