@@ -13,6 +13,8 @@ import { authStateAtom } from "../atoms/login.atom";
 import { messageContentAtom, messagesAtom } from "../atoms/messages.atom";
 import { wsEventsKeys } from "../constants/wsConstants";
 import clsx from "clsx";
+import { useMutation } from "@tanstack/react-query";
+import { addLastMessage } from "../services/conversation.api";
 
 type Props = {
   emojiButton?: ReactNode;
@@ -28,6 +30,16 @@ function ChatFooter({
   sendButton, // voiceButton,
 }: Props) {
   const targetRoom = useRecoilValue(conversationAtom);
+  const { mutate: mutateAddLastMessage } = useMutation({
+    mutationKey: ["last-message"],
+    mutationFn: ({
+      conversationId,
+      lastMessageId,
+    }: {
+      conversationId: string;
+      lastMessageId: string;
+    }) => addLastMessage({ conversationId, lastMessageId }),
+  });
   const moreMessageOptionsRef = useRef<HTMLDivElement | null>(null);
   const [showMoreMessageOptions, setShowMoreMessageOptions] = useState(false);
   const { user: me } = useRecoilValue(authStateAtom);
@@ -71,7 +83,13 @@ function ChatFooter({
   };
 
   useEffect(() => {
-    chatManWebSocket.on(wsEventsKeys.incomingMessage, handleIncomingMessage);
+    chatManWebSocket.on(wsEventsKeys.incomingMessage, (message: Message) => {
+      handleIncomingMessage(message);
+      mutateAddLastMessage({
+        lastMessageId: message._id,
+        conversationId: message.conversationId,
+      });
+    });
     return () => {
       chatManWebSocket.off(wsEventsKeys.incomingMessage);
     };

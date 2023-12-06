@@ -7,8 +7,10 @@ import SideMenuLink from "../components/SideMenuLink";
 import { toggleSideMenuAtom } from "../atoms/app.atom";
 import clsx from "clsx";
 import { useEffect, useRef } from "react";
+import useLogout from "../hooks/useLogout";
 
 function SideMenu() {
+  const { logout } = useLogout();
   const SideMenuRef = useRef<HTMLDivElement | null>(null);
   const { pathname } = useLocation();
   const { user } = useRecoilValue(authStateAtom);
@@ -59,6 +61,7 @@ function SideMenu() {
           <button
             type="button"
             className="flex items-center justify-start gap-3 uppercase text-red-400"
+            onClick={logout}
           >
             <i className="fi fi-rr-sign-out-alt"></i>
             <p>logout</p>

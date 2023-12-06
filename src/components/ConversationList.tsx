@@ -89,8 +89,8 @@ function ConversationList({
                     conversation.participants?.[userTargetIdx].fullName || "N A"
                   }
                 />
-                <div className="flex  flex-grow flex-col items-start justify-start gap-2">
-                  <span className="flex w-full items-center justify-between gap-2">
+                <div className="flex w-full max-w-[calc(100%-4rem)] flex-col items-start justify-start gap-2">
+                  <span className="flex w-full max-w-full items-center justify-between gap-2">
                     <UserConversationCard.userName
                       fullName={
                         conversation.participants?.[userTargetIdx].fullName ||
@@ -98,13 +98,11 @@ function ConversationList({
                       }
                     />
                     <UserConversationCard.UserChatDate
-                      messageDate={conversation.createdAt}
+                      messageDate={formatDate(conversation.createdAt)}
                     />
                   </span>
                   <UserConversationCard.LastMessage
-                    lastMessage={
-                      formatDate(conversation?.lastMessage) || "NA-NA"
-                    }
+                    lastMessage={conversation?.lastMessage?.message ?? "NA-NA"}
                   />
                 </div>
               </UserConversationCard>

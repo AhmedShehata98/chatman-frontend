@@ -29,3 +29,21 @@ export async function userConversations(
     throw error;
   }
 }
+export async function addLastMessage({
+  conversationId,
+  lastMessageId,
+}: {
+  conversationId: string;
+  lastMessageId: string;
+}) {
+  try {
+    const { data } = await CHATMAN_PRIVATE_API({
+      method: "PUT",
+      url: ENDPOINTS.conversation,
+      data: { conversationId, lastMessageId },
+    });
+    return data;
+  } catch (error) {
+    throw error;
+  }
+}

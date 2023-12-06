@@ -29,6 +29,11 @@ interface Conversation {
   conversation: Omit<CreateConversation, "participants" | "conversationType">;
   updatedAt: string;
   createdAt: string;
+  lastMessage: {
+    message: string;
+    sender: string;
+    _id: string;
+  };
 }
 interface User {
   _id: string;

@@ -18,7 +18,7 @@ UserConversationCard.userName = UserName;
 
 function UserName({ fullName }: { fullName: string }) {
   return (
-    <p className="inline-block max-w-[10rem] overflow-hidden truncate font-semibold capitalize text-white max-md:max-w-[6rem]">
+    <p className="inline-block max-w-[10rem] overflow-hidden truncate font-semibold capitalize text-white max-lg:max-w-[22rem] max-sm:max-w-[8rem]">
       {fullName}
     </p>
   );

@@ -5,6 +5,7 @@ import { chatManWebSocket } from "../services/ws";
 import UserTyping from "./userTyping/UserTyping";
 import { wsEventsKeys } from "../constants/wsConstants";
 import { useNavigate } from "react-router-dom";
+import { ROUTES_LIST } from "../router/routes-list";
 
 type Props = {
   userLabel: ReactNode;
@@ -19,7 +20,7 @@ function ChatHeader({ userLabel, callButtons, searchButton }: Props) {
         <button
           type="button"
           title="back"
-          onClick={() => navigator(-1)}
+          onClick={() => navigator(ROUTES_LIST.chatRoom)}
           className="rounded-md p-1.5 text-3xl text-zinc-200 hover:bg-slate-600 max-md:text-xl"
         >
           <i className="fi fi-rr-arrow-small-left"></i>
@@ -91,10 +92,10 @@ function UserLabel({ img, fullName, status, lastSeenDate }: UserLabelProps) {
         {isShowingLastSeenDate ? (
           <p className="text-zinc-400 max-lg:text-sm">{lastSeenDate}</p>
         ) : null}
-        {true ? <UserTyping username={userTyping.name} /> : null}
-        {/* {userTyping && userTyping.isTyping ? (
+
+        {userTyping && userTyping.isTyping ? (
           <UserTyping username={userTyping.name} />
-        ) : null} */}
+        ) : null}
       </div>
     </div>
   );
