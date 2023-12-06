@@ -47,3 +47,14 @@ export async function addLastMessage({
     throw error;
   }
 }
+export async function deleteConversation(conversationId: string) {
+  try {
+    const { data } = await CHATMAN_PRIVATE_API({
+      method: "DELETE",
+      url: `${ENDPOINTS.conversation}/${conversationId}`,
+    });
+    return data;
+  } catch (error) {
+    throw error;
+  }
+}

@@ -27,7 +27,9 @@ function SideMenu() {
         target.clientHeight > bounds?.y! ||
         target.clientHeight < bounds?.y!
       ) {
-        setIsToggledSideMenu(false);
+        if (target.id !== "side-menu-btn" && target.id !== "side-menu-link") {
+          setIsToggledSideMenu(false);
+        }
       }
     };
     document.addEventListener("mousedown", handleCloseMenu);
@@ -60,11 +62,12 @@ function SideMenu() {
           </p>
           <button
             type="button"
+            id="side-menu-btn"
             className="flex items-center justify-start gap-3 uppercase text-red-400"
             onClick={logout}
           >
-            <i className="fi fi-rr-sign-out-alt"></i>
-            <p>logout</p>
+            <i className="fi fi-rr-sign-out-alt pointer-events-none"></i>
+            <p className="pointer-events-none">logout</p>
           </button>
         </span>
         <ul className="grid grid-flow-row gap-2">

@@ -12,3 +12,14 @@ export async function getConversationMessages(
     throw error;
   }
 }
+export async function clearMessages(conversationId: string) {
+  try {
+    const { data } = await CHATMAN_PRIVATE_API({
+      method: "DELETE",
+      url: `${ENDPOINTS.clearMessages}/${conversationId}`,
+    });
+    return data;
+  } catch (error) {
+    throw error;
+  }
+}

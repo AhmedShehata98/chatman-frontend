@@ -13,6 +13,7 @@ export const ENDPOINTS = {
   searchUsers: "/api/user/search",
   conversation: "/api/conversation",
   messages: "/api/message",
+  clearMessages: "/api/message/clear",
   uploadImage: "/api/upload/img",
 };
 export const CHATMAN_API = axios.create({
