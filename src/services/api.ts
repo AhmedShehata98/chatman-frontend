@@ -15,6 +15,8 @@ export const ENDPOINTS = {
   messages: "/api/message",
   clearMessages: "/api/message/clear",
   uploadImage: "/api/upload/img",
+  posts: "/api/posts",
+  feeds: "/api/feeds",
 };
 export const CHATMAN_API = axios.create({
   baseURL,

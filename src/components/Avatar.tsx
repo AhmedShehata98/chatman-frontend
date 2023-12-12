@@ -19,17 +19,15 @@ function Avatar({
 }: Props) {
   function extractNameChars(fullName: string) {
     const shortcut = {
-      fName: fullName.split(" ")[0].charAt(0),
-      lName: fullName.split(" ")[1].charAt(0),
+      fName: fullName.split(" ")[0]?.charAt(0) || "N",
+      lName: fullName.split(" ")[1]?.charAt(0) || "",
     };
     return `${shortcut.fName}${shortcut.lName}`;
   }
-
   return (
-    <button
-      type="button"
+    <figure
       onClick={onClick}
-      className={`relative flex aspect-square h-12 w-12 items-center justify-center rounded-full border-2 ${clsx(
+      className={`relative flex aspect-square h-12 w-12 items-center justify-center rounded-full ${clsx(
         className,
       )}`}
     >
@@ -52,7 +50,7 @@ function Avatar({
           className="aspect-square w-full overflow-hidden rounded-full object-cover object-center"
         />
       )}
-    </button>
+    </figure>
   );
 }
 

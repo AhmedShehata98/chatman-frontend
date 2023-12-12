@@ -1,5 +1,7 @@
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 import UsersMenuHeader from "../components/UsersMenuHeader";
+import Portal from "../components/Portal";
+import AddNewUserModal from "../components/AddNewUserModal";
 
 function ChatLayout({
   children,
@@ -8,18 +10,25 @@ function ChatLayout({
   children: ReactNode;
   conversationElement: ReactNode;
 }) {
+  const [showSearchModal, setIsShowSearchModal] = useState(false);
   return (
     <article className="chat-page">
       <div className="chat-page__conversation-wrapper">
         <UsersMenuHeader
           title="chats"
           onCreateNewChat={() => {
-            console.log("create chat");
+            setIsShowSearchModal(true);
           }}
           onFilter={() => {
             console.log("create chat");
           }}
         />
+        {showSearchModal && (
+          <Portal>
+            <AddNewUserModal setShowModal={setIsShowSearchModal} />
+          </Portal>
+        )}
+
         <div className="mt-4 flex max-h-full w-full flex-grow flex-col justify-start overflow-y-auto px-6 max-lg:px-3">
           {conversationElement}
         </div>

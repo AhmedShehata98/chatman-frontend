@@ -8,4 +8,6 @@ export const wsEventsKeys = {
   changeUserStatus: "CHANGE_USER_STATUS",
   startSession: "START_SESSION",
   leaveSession: "LEAVE_SESSION",
+  newFeedPost: "NEW_FEED_POST",
+  joinFeeds: "JOIN_FEEDS",
 };

@@ -10,6 +10,8 @@ import Settings from "../pages/Settings";
 import Profile from "../pages/Profile";
 import Personalization from "../pages/Personalization";
 import { getUserData } from "../services/auth.api";
+import Feeds from "../pages/Feeds";
+import FeedRoom from "../pages/FeedRoom";
 
 export const router = createBrowserRouter([
   {
@@ -46,6 +48,16 @@ export const router = createBrowserRouter([
           {
             path: ROUTES_LIST.personalization,
             element: <Personalization />,
+          },
+        ],
+      },
+      {
+        path: ROUTES_LIST.feeds,
+        element: <Feeds />,
+        children: [
+          {
+            path: ":feedName",
+            element: <FeedRoom />,
           },
         ],
       },

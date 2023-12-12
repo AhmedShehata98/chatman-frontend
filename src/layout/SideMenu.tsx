@@ -41,7 +41,7 @@ function SideMenu() {
     <aside
       className={`${clsx(
         isToggledSideMenu ? "translate-x-0" : "-translate-x-full",
-      )} absolute left-0 top-0 z-30 flex h-[100dvh] w-full items-start justify-start bg-neutral-700 bg-opacity-40 transition-transform`}
+      )} absolute left-0 top-0 z-30 flex h-[100dvh] w-full items-start justify-start bg-zinc-700 bg-opacity-70 transition-transform`}
     >
       <div
         ref={SideMenuRef}
@@ -77,6 +77,13 @@ function SideMenu() {
           >
             <i className="fi fi-rr-comment-alt pointer-events-none leading-3"></i>
             <p className="pointer-events-none">chat</p>
+          </SideMenuLink>
+          <SideMenuLink
+            to={ROUTES_LIST.feeds}
+            isActive={pathname === ROUTES_LIST.feeds}
+          >
+            <i className="`fi fi-rr-blog-text pointer-events-none leading-3"></i>
+            <p className="pointer-events-none">feeds</p>
           </SideMenuLink>
           <SideMenuLink
             to={ROUTES_LIST.call}

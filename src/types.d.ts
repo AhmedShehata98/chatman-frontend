@@ -80,3 +80,50 @@ interface Message {
   updatedAt: string;
   __v: number;
 }
+
+interface Post {
+  _id: string;
+  feedRoom: IFeed;
+  publisher: User;
+  content: { text: string; media: string };
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface CreatePost {
+  publisher: string;
+  feedRoom: string;
+  content: { text: string; media: string };
+}
+
+interface UploadResult {
+  bytes: number;
+  created_at: string;
+  format: string;
+  height: number;
+  secure_url: string;
+  url: string;
+  width: number;
+}
+
+interface IFeed {
+  _id: string;
+  feedName: string;
+  feedCover: string;
+  isPrivate: boolean;
+  description: string;
+  owner: IUser;
+  createdAt: string;
+  updatedAt: string;
+  posts: IPost[];
+  followersLength: number;
+  followers: [];
+}
+interface CreateFeed {
+  feedName: string;
+  feedCover: string | undefined;
+  isPrivate: boolean;
+  description: string | undefined;
+  owner?: string;
+  posts?: CreatePost[];
+}

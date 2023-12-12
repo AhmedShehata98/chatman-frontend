@@ -7,4 +7,5 @@ export const ROUTES_LIST = {
   settings: "/settings",
   profile: "/settings/profile",
   personalization: "/settings/personalization",
+  feeds: "/feeds",
 };
