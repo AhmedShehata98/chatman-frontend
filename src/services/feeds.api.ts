@@ -48,3 +48,44 @@ export async function getFeedById(feedId: string): Promise<IFeed> {
     throw error;
   }
 }
+
+export async function followFeed({
+  feedId,
+  token,
+}: {
+  feedId: string;
+  token: string;
+}) {
+  try {
+    const { data } = await CHATMAN_PRIVATE_API({
+      method: "PUT",
+      url: `${ENDPOINTS.feeds}/${feedId}`,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function isFollower({
+  feedId,
+  token,
+}: {
+  feedId: string;
+  token: string;
+}) {
+  try {
+    const { data } = await CHATMAN_PRIVATE_API({
+      url: `${ENDPOINTS.feedsFollowerCheck}/${feedId}`,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return data;
+  } catch (error) {
+    throw error;
+  }
+}

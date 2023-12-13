@@ -1,7 +1,7 @@
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
-import { useState, useEffect } from "react";
+import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
+import { useState, useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { getFeedById } from "../services/feeds.api";
+import { followFeed, getFeedById, isFollower } from "../services/feeds.api";
 import Avatar from "../components/Avatar";
 import { getAllPosts } from "../services/posts.api";
 import ConversationFooterWrapper from "../components/ConversationFooterWrapper";
@@ -13,12 +13,15 @@ import { authStateAtom } from "../atoms/login.atom";
 import { feedInputsAtom } from "../atoms/feed.atom";
 import PostCard from "../components/PostCard";
 import { ROUTES_LIST } from "../router/routes-list";
+import LoadingIndicator from "../components/LoadingIndicator";
+import clsx from "clsx";
 
 function FeedRoom() {
   const location = useLocation();
-  const { user: me } = useRecoilValue(authStateAtom);
+  const { user: me, token } = useRecoilValue(authStateAtom);
   const postContent = useRecoilValue(feedInputsAtom);
   const navigate = useNavigate();
+  const postsListRef = useRef<HTMLElement | null>(null);
 
   const { handleCreateFeedPost } = useFeedsMessages({
     feedId: location.state,
@@ -34,7 +37,17 @@ function FeedRoom() {
     queryFn: () => getFeedById(location.state),
     enabled: Boolean(location.state),
   });
-  const { data: PostsData, isFetched: isFetchedPosts } = useInfiniteQuery({
+  const { data: isFollowerUser } = useQuery({
+    queryKey: ["is-follower", token],
+    queryFn: () =>
+      isFollower({ feedId: location.state, token: token as string }),
+    enabled: Boolean(token),
+  });
+  const {
+    data: PostsData,
+    isFetched: isFetchedPosts,
+    isLoading: gettingPosts,
+  } = useInfiniteQuery({
     queryKey: ["feed-posts", location.state],
     queryFn: ({ pageParam }) =>
       getAllPosts({ feedId: location.state, limit, page: +pageParam }),
@@ -45,6 +58,11 @@ function FeedRoom() {
         return allPages.length;
       return undefined;
     },
+  });
+  const { mutate: startFollowFeed } = useMutation({
+    mutationKey: ["follow-feed"],
+    mutationFn: (feedId: string) =>
+      followFeed({ feedId, token: token as string }),
   });
 
   const handleSendPost = (ev: React.FormEvent<HTMLFormElement>) => {
@@ -62,6 +80,15 @@ function FeedRoom() {
     };
   }, [chatManWebSocket]);
 
+  useEffect(() => {
+    postsListRef.current?.scrollBy({
+      behavior: "smooth",
+      top: postsListRef.current?.scrollHeight,
+    });
+  }, [postsListRef.current?.scrollHeight]);
+
+  console.log(isFollowerUser);
+
   return (
     <div className="relative flex h-dynamic-screen w-full flex-col items-start justify-between overflow-hidden">
       <header className="z-10 flex w-full items-center justify-start bg-primary-300 px-3 py-2">
@@ -69,7 +96,7 @@ function FeedRoom() {
           <button
             type="button"
             onClick={() => navigate(ROUTES_LIST.feeds)}
-            className="h-10 w-10 rounded-full text-3xl leading-3 text-white hover:bg-secondary-100 hover:bg-opacity-50"
+            className="h-10 w-10 rounded-full text-3xl leading-3 text-white hover:bg-secondary-100 hover:bg-opacity-50 max-md:h-8 max-md:w-8 max-md:text-xl"
           >
             <i className="fi fi-rr-arrow-small-left"></i>
           </button>
@@ -78,13 +105,13 @@ function FeedRoom() {
               fullName={feedDetails?.feedName || "n a"}
               showStatus={false}
               src={feedDetails?.feedCover || null}
-              className="h-16 w-16"
+              className="h-16 w-16 max-md:h-12 max-md:w-12"
             />
             <span>
-              <p className="font-medium capitalize text-white">
+              <p className="font-medium capitalize text-white max-md:text-sm">
                 {feedDetails?.feedName}
               </p>
-              <code className="text-sm text-slate-300">
+              <code className="text-sm text-slate-300 max-md:text-xs">
                 {feedDetails?.followers.length === 0 && "no followers"}
                 {feedDetails?.followers &&
                   feedDetails?.followers.length >= 1 &&
@@ -93,11 +120,43 @@ function FeedRoom() {
             </span>
           </div>
         </div>
-        <button className="ms-auto h-12 w-12 text-2xl text-white">
-          <i className="fi fi-sr-menu-dots-vertical"></i>
-        </button>
+        <div className="ms-auto flex items-center justify-end">
+          {FetchedFeedDetails &&
+            !isFollower &&
+            feedDetails?.owner !== me?._id && (
+              <button
+                type="button"
+                className="flex items-center justify-center gap-3 rounded-md bg-secondary-100 px-6 py-3 text-lg font-medium capitalize leading-3 hover:brightness-125"
+                onClick={() =>
+                  startFollowFeed(location.state, {
+                    onSuccess: (data) => console.log(data),
+                    onError: (err) => console.log(err),
+                  })
+                }
+              >
+                <i className="fi fi-sr-add"></i>
+                <p>follow</p>
+              </button>
+            )}
+          <button className="h-12 w-12 text-2xl text-white max-md:text-xl">
+            <i className="fi fi-sr-menu-dots-vertical"></i>
+          </button>
+        </div>
       </header>
-      <section className="relative h-[calc(100dvh-7rem)] max-h-[calc(100dvh-7rem)] w-full overflow-y-auto after:fixed after:inset-0 after:z-[5] after:bg-primary-200 after:bg-opacity-50 after:content-['']">
+      <section
+        ref={postsListRef}
+        className="overlay-layer relative h-[calc(100dvh-7rem)] max-h-[calc(100dvh-7rem)] w-full overflow-y-auto"
+      >
+        <div
+          className={`${clsx(
+            gettingPosts
+              ? "pointer-events-auto translate-y-0 opacity-100"
+              : "pointer-events-none -translate-y-6 opacity-0",
+          )} fixed left-2/3 z-20 mt-4 -translate-x-3/4 rounded-full bg-primary-200 p-3 transition-all duration-500`}
+        >
+          <LoadingIndicator isShown={true} />
+        </div>
+
         <ul className="relative z-10 flex max-w-3xl flex-col gap-4 p-9 max-md:p-3">
           {isFetchedPosts &&
             PostsData?.pages?.map((page) =>
@@ -118,6 +177,17 @@ function FeedRoom() {
             </div>
           )}
       </section>
+      {!isFollower && feedDetails?.owner !== me?._id && (
+        <div className="z-10 flex w-full items-center justify-start bg-primary-300 px-3 py-4">
+          <button
+            type="button"
+            className="mx-auto flex items-center justify-center gap-3 text-xl font-medium capitalize text-secondary-100"
+          >
+            <p>follow </p>
+            <i className="fi fi-sr-add leading-3"></i>
+          </button>
+        </div>
+      )}
       {!FetchedFeedDetails || feedDetails?.owner !== me?._id ? null : (
         <ConversationFooterWrapper onSubmit={handleSendPost} />
       )}

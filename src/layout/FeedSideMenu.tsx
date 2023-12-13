@@ -10,7 +10,7 @@ function FeedSideMenu() {
   const [toggleSideMenu, setToggleSideMenu] =
     useRecoilState(toggleSideMenuAtom);
   return (
-    <aside className="relative flex h-dynamic-screen w-1/3 flex-col bg-primary-200 p-4 max-lg:w-full">
+    <aside className="relative flex h-dynamic-screen w-1/3 flex-col bg-primary-200 p-4 max-lg:w-full lg:z-[15]">
       <div className="flex w-full items-center justify-start">
         <button
           type="button"

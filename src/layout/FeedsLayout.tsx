@@ -13,7 +13,7 @@ function FeedsLayout({ children }: { children: React.ReactNode }) {
         style={{ backgroundImage: `url(${mainAppBg})` }}
         className={`${clsx({
           "max-lg:z-[-1]": !Boolean(location.state),
-        })} flex h-dynamic-screen w-full flex-col items-center justify-start overflow-y-hidden bg-cover bg-center bg-no-repeat max-lg:absolute max-lg:inset-0 max-lg:w-full`}
+        })} z-10 flex h-dynamic-screen w-full flex-col items-center justify-start overflow-y-hidden bg-cover bg-center bg-no-repeat max-lg:absolute max-lg:inset-0 max-lg:w-full`}
       >
         {children}
       </div>

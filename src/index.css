@@ -26,5 +26,8 @@
   .chat-room {
     @apply z-10 flex h-dynamic-screen max-h-[100dvh] w-full max-w-full flex-col items-start justify-start bg-cover bg-no-repeat max-lg:absolute max-lg:left-0 max-lg:top-0;
   }
+  .overlay-layer {
+    @apply after:fixed after:inset-0 after:z-[5] after:bg-primary-200 after:bg-opacity-50 after:content-[''];
+  }
 }
 @tailwind utilities;

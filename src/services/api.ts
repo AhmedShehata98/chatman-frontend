@@ -17,6 +17,7 @@ export const ENDPOINTS = {
   uploadImage: "/api/upload/img",
   posts: "/api/posts",
   feeds: "/api/feeds",
+  feedsFollowerCheck: "/api/feeds/is-follower",
 };
 export const CHATMAN_API = axios.create({
   baseURL,

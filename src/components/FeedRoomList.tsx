@@ -6,13 +6,14 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { ROUTES_LIST } from "../router/routes-list";
 import { useRecoilValue } from "recoil";
 import { authStateAtom } from "../atoms/login.atom";
+import LoadingIndicator from "./LoadingIndicator";
 
 function FeedRoomList() {
   const [limit, _setLimit] = useState(10);
   const navigate = useNavigate();
   const location = useLocation();
   const { token } = useRecoilValue(authStateAtom);
-  const { data: feedListData } = useInfiniteQuery({
+  const { data: feedListData, isLoading } = useInfiniteQuery({
     queryKey: ["feeds"],
     queryFn: ({ pageParam }) =>
       getAllFeeds({ limit: 10, page: +pageParam, token: token as string }),
@@ -38,6 +39,7 @@ function FeedRoomList() {
       <h3 className="mt-6 px-2 text-2xl font-medium capitalize text-white">
         feeds
       </h3>
+      <LoadingIndicator isShown={isLoading} />
       <ul className="flex max-h-[90dvh] w-full flex-col items-start justify-start gap-2 rounded-md">
         {feedListData?.pages.map((page) =>
           page.data.map(function (feed) {
