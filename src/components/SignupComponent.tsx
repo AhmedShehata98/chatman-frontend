@@ -99,7 +99,7 @@ function SignUpComponent() {
           htmlFor="profileImage"
           className={`${clsx(
             profileImgPreview ? "hidden" : "flex",
-          )} text-secondary-200 cursor-pointer items-center justify-center text-4xl hover:brightness-150`}
+          )} cursor-pointer items-center justify-center text-4xl text-secondary-200 hover:brightness-150`}
         >
           <span
             className={`${clsx(
@@ -124,32 +124,32 @@ function SignUpComponent() {
         name="fullName"
         id="fullName"
         placeholder="full name..."
-        className="focus:border-secondary-200 mb-5 w-full rounded-md border-2 bg-[#f9f9fa] px-6 py-4 shadow-sm focus:outline-none"
+        className="mb-5 w-full rounded-md border-2 bg-[#f9f9fa] px-6 py-4 shadow-sm focus:border-secondary-200 focus:outline-none"
       />
       <input
         type="email"
         name="email"
         id="email"
         placeholder="email address..."
-        className="focus:border-secondary-200 mb-5 w-full rounded-md border-2 bg-[#f9f9fa] px-6 py-4 shadow-sm focus:outline-none"
+        className="mb-5 w-full rounded-md border-2 bg-[#f9f9fa] px-6 py-4 shadow-sm focus:border-secondary-200 focus:outline-none"
       />
       <input
         type="password"
         name="password"
         id="password"
         placeholder="**************"
-        className="focus:border-secondary-200 mb-5 w-full rounded-md border-2 bg-[#f9f9fa] px-6 py-4 shadow-sm focus:outline-none"
+        className="mb-5 w-full rounded-md border-2 bg-[#f9f9fa] px-6 py-4 shadow-sm focus:border-secondary-200 focus:outline-none"
       />
       <button
         type="submit"
         title="click to login"
         disabled={isPending}
-        className="bg-secondary-200 mb-6 mt-5 flex flex-row items-center justify-center gap-4 rounded-md px-4 py-5 text-xl font-semibold capitalize text-white shadow hover:brightness-125 disabled:bg-[#00332b]"
+        className="mb-6 mt-5 flex flex-row items-center justify-center gap-4 rounded-md bg-secondary-200 px-4 py-5 text-xl font-semibold capitalize text-white shadow hover:brightness-125 disabled:bg-[#00332b]"
       >
         {isPending ? (
           <>
             <span className="inline-block h-8 w-8">
-              <LoadingIndicator dir="row" />
+              <LoadingIndicator dir="row" isShown className="h-8 w-8" />
             </span>
             <small>sending ...</small>
           </>
@@ -159,7 +159,7 @@ function SignUpComponent() {
       </button>
       <Link
         to={`${ROUTES_LIST.register}?sec=login`}
-        className="text-secondary-200 text-center capitalize underline"
+        className="text-center capitalize text-secondary-200 underline"
       >
         have already account ? login
       </Link>

@@ -65,25 +65,25 @@ function LoginComponent() {
         name="email"
         id="email"
         placeholder="email address..."
-        className="focus:border-secondary-200 mb-5 w-full rounded-md border-2 bg-[#f9f9fa] px-6 py-4 shadow-sm focus:outline-none"
+        className="mb-5 w-full rounded-md border-2 bg-[#f9f9fa] px-6 py-4 shadow-sm focus:border-secondary-200 focus:outline-none"
       />
       <input
         type="password"
         name="password"
         id="password"
         placeholder="**************"
-        className="focus:border-secondary-200 mb-5 w-full rounded-md border-2 bg-[#f9f9fa] px-6 py-4 shadow-sm focus:outline-none"
+        className="mb-5 w-full rounded-md border-2 bg-[#f9f9fa] px-6 py-4 shadow-sm focus:border-secondary-200 focus:outline-none"
       />
       <button
         type="submit"
         disabled={isPending}
         title="click to login"
-        className="bg-secondary-200 mb-6 mt-5 flex items-center justify-center gap-4 rounded-md px-4 py-5 text-xl font-semibold capitalize text-white shadow hover:brightness-125"
+        className="mb-6 mt-5 flex items-center justify-center gap-4 rounded-md bg-secondary-200 px-4 py-5 text-xl font-semibold capitalize text-white shadow hover:brightness-125"
       >
         {isPending ? (
           <>
             <span className="inline-block h-8 w-8">
-              <LoadingIndicator dir="row" />
+              <LoadingIndicator dir="row" isShown className="h-8 w-8" />
             </span>
             <small>sending ...</small>
           </>
@@ -93,7 +93,7 @@ function LoginComponent() {
       </button>
       <Link
         to={`${ROUTES_LIST.register}?sec=signup`}
-        className="text-secondary-200 text-center capitalize underline"
+        className="text-center capitalize text-secondary-200 underline"
       >
         You don't have an account yet ?.. create one
       </Link>
