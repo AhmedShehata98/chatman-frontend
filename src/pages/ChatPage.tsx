@@ -5,7 +5,7 @@ import { useRecoilValue } from "recoil";
 import { authStateAtom } from "../atoms/login.atom";
 import { useQuery } from "@tanstack/react-query";
 import { userConversations } from "../services/conversation.api";
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import Portal from "../components/Portal";
 import AddNewUserModal from "../components/AddNewUserModal";
 import { searchOnContactsAtom } from "../atoms/app.atom";
