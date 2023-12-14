@@ -86,7 +86,10 @@ function AddNewFeedRoom({
   };
   return (
     <LandscapeModal ref={modalRef}>
-      <span className="flex w-full items-center justify-start gap-4">
+      <span className="flex w-full items-center justify-between gap-4">
+        <p className="text-center text-lg font-medium capitalize text-white">
+          add new feed-room
+        </p>
         <button
           type="button"
           className="rounded bg-red-600 px-4 py-2 text-xl leading-3 text-white"
@@ -94,9 +97,6 @@ function AddNewFeedRoom({
         >
           <i className="fi fi-sr-arrow-left"></i>
         </button>
-        <p className="text-center text-lg font-medium capitalize text-white">
-          add new feed-room
-        </p>
       </span>
       <span className="relative my-5 flex w-full items-center justify-center rounded-md bg-primary-100">
         {feedPicture !== "" && !isUploaded && (

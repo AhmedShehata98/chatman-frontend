@@ -50,7 +50,11 @@ const AppRoot = () => {
     const isLoggedIn = Cookies.get("isLoggedIn") === "true" ? true : false;
     const token = Cookies.get("token");
 
-    if (!isLoggedIn || token === null) return navigator(ROUTES_LIST.register);
+    if (!isLoggedIn || token === null) {
+      navigator(ROUTES_LIST.register);
+    } else {
+      navigator(ROUTES_LIST.chatRoom);
+    }
     if (isLoggedIn && token) {
       handleSetUserData(token);
       return () => {

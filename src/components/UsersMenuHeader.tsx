@@ -1,18 +1,6 @@
-import {
-  ChangeEvent,
-  MouseEventHandler,
-  useDeferredValue,
-  useEffect,
-  useState,
-} from "react";
-import { searchUsers } from "../services/auth.api";
-import Avatar from "./Avatar";
-import clsx from "clsx";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { authStateAtom } from "../atoms/login.atom";
-import { createConversation } from "../services/conversation.api";
-import { toggleSideMenuAtom } from "../atoms/app.atom";
+import { ChangeEvent, MouseEventHandler, useEffect, useState } from "react";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import { searchOnContactsAtom, toggleSideMenuAtom } from "../atoms/app.atom";
 
 type Props = {
   title: string;
@@ -21,46 +9,26 @@ type Props = {
 };
 function UsersMenuHeader({ onCreateNewChat, onFilter, title }: Props) {
   const [query, setQuery] = useState("");
-  const { user } = useRecoilValue(authStateAtom);
+  const setSearchOnContacts = useSetRecoilState(searchOnContactsAtom);
   const [toggleSideMenu, setToggleSideMenu] =
     useRecoilState(toggleSideMenuAtom);
-  const queryClient = useQueryClient();
-  const deferredQuery = useDeferredValue(query);
-  const { mutateAsync: mutateCreateConversation } = useMutation({
-    mutationFn: (conversationData: CreateConversation) =>
-      createConversation(conversationData),
-    mutationKey: ["conversation"],
-  });
 
-  const [usersList, setUsersList] = useState<SearchResult[] | null>(null);
   function handleGetUserSearchQuery(ev: ChangeEvent) {
     const target = ev.target as HTMLInputElement;
     setQuery(target.value);
   }
 
-  async function handleChooseUser(receiverId: string) {
-    setQuery("");
-    await mutateCreateConversation(
-      {
-        participants: [receiverId, user?._id as string],
-        conversationType: "PRIVATE",
-      },
-      {
-        onSuccess: (data) => {
-          queryClient.invalidateQueries({ queryKey: ["conversation"] });
-          console.log(data);
-        },
-      },
-    );
-  }
-
   useEffect(() => {
-    if (deferredQuery !== "") {
-      searchUsers(deferredQuery).then((users) => {
-        setUsersList(users);
-      });
-    }
-  }, [deferredQuery]);
+    let timeout: number;
+
+    timeout = +setTimeout(() => {
+      setSearchOnContacts(query);
+    }, 300);
+
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [query]);
 
   return (
     <div className="flex h-max w-full flex-col items-center justify-between px-9 py-6 max-lg:px-3 max-lg:py-4">
@@ -107,47 +75,6 @@ function UsersMenuHeader({ onCreateNewChat, onFilter, title }: Props) {
           value={query}
           onChange={handleGetUserSearchQuery}
         />
-        <div
-          className={`${clsx(
-            {
-              hidden: usersList === null,
-            },
-            {
-              hidden: query === "",
-            },
-          )} absolute left-0 top-full z-20 flex h-max max-h-[35dvh] w-full flex-col items-start justify-start gap-5 bg-[#18252e] p-6`}
-        >
-          <h4 className="px-3 pb-2 font-bold uppercase text-zinc-300">
-            available contacts :
-          </h4>
-          <ul
-            className={`-my-3 flex w-full flex-col items-start justify-center gap-3 overflow-y-auto ${clsx(
-              usersList && usersList.length >= 4 ? "pt-24" : "py-1.5",
-            )}`}
-          >
-            {query !== "" && usersList !== null
-              ? usersList?.map((user) => (
-                  <li
-                    key={user._id}
-                    className="flex w-11/12 cursor-pointer items-center justify-start gap-4 px-4 py-2.5 hover:bg-[#243744]"
-                    onClick={() => handleChooseUser(user._id)}
-                  >
-                    <Avatar
-                      showStatus={false}
-                      src={user.profilePictureUrl}
-                      fullName={user.fullName}
-                    />
-                    <span className="flex flex-col justify-start gap-1">
-                      <strong className="text-zinc-100">{`${user.username}`}</strong>
-                      <small className="font-semibold capitalize text-zinc-400">
-                        {user.createdAt}
-                      </small>
-                    </span>
-                  </li>
-                ))
-              : null}
-          </ul>
-        </div>
       </form>
     </div>
   );

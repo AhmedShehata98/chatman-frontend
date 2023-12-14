@@ -1,34 +1,19 @@
-import { ReactNode, useState } from "react";
+import { ReactNode } from "react";
 import UsersMenuHeader from "../components/UsersMenuHeader";
-import Portal from "../components/Portal";
-import AddNewUserModal from "../components/AddNewUserModal";
 
 function ChatLayout({
   children,
   conversationElement,
+  conversationHeader,
 }: {
   children: ReactNode;
   conversationElement: ReactNode;
+  conversationHeader: ReactNode;
 }) {
-  const [showSearchModal, setIsShowSearchModal] = useState(false);
   return (
     <article className="chat-page">
       <div className="chat-page__conversation-wrapper">
-        <UsersMenuHeader
-          title="chats"
-          onCreateNewChat={() => {
-            setIsShowSearchModal(true);
-          }}
-          onFilter={() => {
-            console.log("create chat");
-          }}
-        />
-        {showSearchModal && (
-          <Portal>
-            <AddNewUserModal setShowModal={setIsShowSearchModal} />
-          </Portal>
-        )}
-
+        {conversationHeader}
         <div className="mt-4 flex max-h-full w-full flex-grow flex-col justify-start overflow-y-auto px-6 max-lg:px-3">
           {conversationElement}
         </div>
@@ -42,3 +27,4 @@ function ChatLayout({
 }
 
 export default ChatLayout;
+ChatLayout.UsersMenuHeader = UsersMenuHeader;

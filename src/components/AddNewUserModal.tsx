@@ -1,6 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { searchUsers } from "../services/auth.api";
-import { Dispatch, SetStateAction, useDeferredValue, useState } from "react";
+import {
+  Dispatch,
+  SetStateAction,
+  useDeferredValue,
+  useEffect,
+  useState,
+} from "react";
 import Avatar from "./Avatar";
 import { formatDate } from "../utils/utils";
 import { createConversation } from "../services/conversation.api";
@@ -15,16 +21,17 @@ function AddNewUserModal({
 }) {
   const [query, setQuery] = useState("");
   const deferredQuery = useDeferredValue(query);
+
   const { user } = useRecoilValue(authStateAtom);
-  const { data, isLoading, isFetched } = useQuery({
-    queryKey: ["search-users", deferredQuery],
-    queryFn: () => searchUsers(deferredQuery),
-    enabled: deferredQuery !== "",
+  const { refetch, data, isLoading, isFetched } = useQuery({
+    queryKey: ["search-users"],
+    queryFn: () => searchUsers(query),
+    enabled: query !== "",
   });
   const { mutateAsync: mutateCreateConversation } = useMutation({
     mutationFn: (conversationData: CreateConversation) =>
       createConversation(conversationData),
-    mutationKey: ["conversation"],
+    mutationKey: ["create-conversation"],
   });
   const queryClient = useQueryClient();
 
@@ -44,12 +51,25 @@ function AddNewUserModal({
     );
   }
 
+  useEffect(() => {
+    let timeout: number;
+    timeout = +setTimeout(() => {
+      refetch();
+    }, 500);
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [query]);
+
   return (
     <LandscapeModal>
-      <span>
+      <span className="flex w-full items-center justify-between">
+        <p className="text-lg font-medium capitalize text-white">
+          add new contact
+        </p>
         <button
           type="button"
-          className="rounded bg-red-600 px-5 py-3 text-xl leading-3 text-white"
+          className="rounded bg-red-600 px-5 py-3 text-xl leading-3 text-white max-md:py-2 max-md:text-lg"
           onClick={() => setShowModal(false)}
         >
           X

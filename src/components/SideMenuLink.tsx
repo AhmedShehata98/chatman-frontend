@@ -1,13 +1,14 @@
 import clsx from "clsx";
-import React from "react";
+import React, { MouseEventHandler } from "react";
 import { Link, To } from "react-router-dom";
 
 type Props = {
   to: To;
   isActive: boolean;
   children: React.ReactNode;
+  onClick: MouseEventHandler;
 };
-function SideMenuLink({ to, isActive, children }: Props) {
+function SideMenuLink({ onClick, to, isActive, children }: Props) {
   return (
     <Link
       to={to}
@@ -17,6 +18,7 @@ function SideMenuLink({ to, isActive, children }: Props) {
           : "relative flex w-full cursor-pointer items-center justify-start gap-3 rounded-md px-3 py-3 text-xl capitalize text-zinc-200 shadow-md hover:bg-zinc-700",
       )}
       id="side-menu-link"
+      onClick={onClick}
     >
       {children}
     </Link>

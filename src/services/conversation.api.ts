@@ -13,9 +13,13 @@ export async function createConversation(conversationData: CreateConversation) {
   }
 }
 
-export async function userConversations(
-  token?: string,
-): Promise<Conversation[]> {
+export async function userConversations({
+  token,
+  q = "",
+}: {
+  token?: string;
+  q?: string;
+}): Promise<Conversation[]> {
   try {
     const { data } = await CHATMAN_PRIVATE_API({
       method: "GET",
@@ -23,6 +27,7 @@ export async function userConversations(
       headers: {
         Authorization: `Bearer ${token}`,
       },
+      params: { q },
     });
     return data;
   } catch (error) {
