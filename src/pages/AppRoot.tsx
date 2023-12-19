@@ -1,7 +1,12 @@
 import { useRecoilState } from "recoil";
 import { authStateAtom } from "../atoms/login.atom";
 import { useEffect } from "react";
-import { Outlet, useNavigate, useNavigation } from "react-router-dom";
+import {
+  Outlet,
+  useLocation,
+  useNavigate,
+  useNavigation,
+} from "react-router-dom";
 import { ROUTES_LIST } from "../router/routes-list";
 import MainLayout from "../layout/MainLayout";
 import { useMutation } from "@tanstack/react-query";
@@ -15,6 +20,7 @@ const AppRoot = () => {
   const [_, setAuthState] = useRecoilState(authStateAtom);
   const { state } = useNavigation();
   const navigator = useNavigate();
+  const location = useLocation();
   const { mutate } = useMutation({
     mutationKey: ["user-data"],
     mutationFn: (token: string) => getUserData(token),
@@ -53,7 +59,8 @@ const AppRoot = () => {
     if (!isLoggedIn || token === null) {
       navigator(ROUTES_LIST.register);
     } else {
-      navigator(ROUTES_LIST.chatRoom);
+      if (location.pathname.endsWith("/"))
+        return navigator(ROUTES_LIST.chatRoom);
     }
     if (isLoggedIn && token) {
       handleSetUserData(token);

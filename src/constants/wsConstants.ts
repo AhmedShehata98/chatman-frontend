@@ -10,4 +10,5 @@ export const wsEventsKeys = {
   leaveSession: "LEAVE_SESSION",
   newFeedPost: "NEW_FEED_POST",
   joinFeeds: "JOIN_FEEDS",
+  like: "LIKE",
 };

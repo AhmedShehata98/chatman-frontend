@@ -26,7 +26,7 @@ function FeedCard({
       className={`${clsx({
         "bg-secondary-200 bg-opacity-40 hover:bg-secondary-200 hover:bg-opacity-40":
           isActive,
-      })} flex w-full flex-col items-center justify-start gap-3 px-4 py-3 hover:bg-primary-300`}
+      })} flex w-full flex-col items-center justify-start gap-3 rounded-md px-4 py-3 hover:bg-secondary-200 hover:bg-opacity-40`}
     >
       <div className="flex w-full items-center justify-center gap-3">
         <Avatar

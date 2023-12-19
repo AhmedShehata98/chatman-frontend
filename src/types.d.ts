@@ -88,6 +88,7 @@ interface Post {
   content: { text: string; media: string };
   createdAt: string;
   updatedAt: string;
+  reaction: User[];
 }
 
 interface CreatePost {
@@ -126,4 +127,24 @@ interface CreateFeed {
   description: string | undefined;
   owner?: string;
   posts?: CreatePost[];
+}
+
+interface Comments {
+  _id: string;
+  postId: Post;
+  commentUser: User;
+  comment: {
+    text: string;
+    media: string;
+  };
+  createdAt: string;
+  updatedAt: string;
+}
+interface CreateComment {
+  postId: string;
+  commentUser: string;
+  comment: {
+    text: string;
+    media: string;
+  };
 }

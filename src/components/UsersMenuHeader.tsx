@@ -71,7 +71,7 @@ function UsersMenuHeader({ onCreateNewChat, onFilter, title }: Props) {
           id="search"
           autoComplete="off"
           placeholder="search or start new chat ..."
-          className="flex-1 flex-grow rounded-md border border-transparent bg-[#202C33] px-4 py-3 text-white focus:border-[#00A884] focus:outline-none max-md:py-1.5"
+          className="flex-1 flex-grow rounded-md border border-transparent bg-primary-200 px-4 py-3 text-white focus:border-[#00A884] focus:outline-none max-md:py-1.5"
           value={query}
           onChange={handleGetUserSearchQuery}
         />

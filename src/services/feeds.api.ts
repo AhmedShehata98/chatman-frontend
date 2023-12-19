@@ -37,11 +37,20 @@ export async function getAllFeeds({
   }
 }
 
-export async function getFeedById(feedId: string): Promise<IFeed> {
+export async function getFeedById({
+  feedId,
+  token,
+}: {
+  feedId: string;
+  token: string;
+}): Promise<IFeed> {
   try {
     const { data } = await CHATMAN_PRIVATE_API({
       method: "GET",
       url: `${ENDPOINTS.feeds}/${feedId}`,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     });
     return data;
   } catch (error) {

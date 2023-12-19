@@ -15,7 +15,7 @@
     @apply relative flex h-dynamic-screen w-full items-start justify-start divide-x divide-slate-800;
   }
   .chat-page__conversation-wrapper {
-    @apply flex h-full min-w-[25%] flex-col items-start justify-start bg-primary-300 max-lg:w-full max-lg:min-w-full lg:w-1/4;
+    @apply flex h-full min-w-[25%] flex-col items-start justify-start bg-primary-100 max-lg:w-full max-lg:min-w-full lg:w-1/4;
   }
   .conversation-list {
     @apply flex max-h-full w-full max-w-full flex-col items-start justify-start gap-2 divide-y divide-slate-600;
@@ -28,6 +28,27 @@
   }
   .overlay-layer {
     @apply after:fixed after:inset-0 after:z-[5] after:bg-primary-200 after:bg-opacity-50 after:content-[''];
+  }
+  .feed-room {
+    @apply relative flex h-dynamic-screen w-full flex-col items-start justify-between overflow-hidden;
+  }
+  .feed-list {
+    @apply relative z-10 flex max-w-3xl flex-col gap-4 p-9 max-md:p-3;
+  }
+  .feed-card {
+    @apply flex w-full items-start justify-start gap-3 rounded-md shadow-lg;
+  }
+  .feed-card__options-menu {
+    @apply absolute right-8 top-5 w-48 divide-y divide-secondary-200 rounded-md bg-primary-200 shadow-lg;
+  }
+  .options-menu__option {
+    @apply flex cursor-pointer items-center justify-start gap-3 px-3 py-2 text-white hover:bg-secondary-200 hover:bg-opacity-20;
+  }
+  .chat__header {
+    @apply z-10 flex w-full items-center justify-start bg-primary-300 px-3 py-2;
+  }
+  .chat__body {
+    @apply overlay-layer relative h-[calc(100dvh-7rem)] max-h-[calc(100dvh-7rem)] w-full overflow-y-auto;
   }
 }
 @tailwind utilities;

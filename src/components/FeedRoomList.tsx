@@ -39,7 +39,9 @@ function FeedRoomList() {
       <h3 className="mt-6 px-2 text-2xl font-medium capitalize text-white">
         feeds
       </h3>
-      <LoadingIndicator isShown={isLoading} />
+
+      <LoadingIndicator className="mx-auto my-4" isShown={isLoading} />
+
       <ul className="flex max-h-[90dvh] w-full flex-col items-start justify-start gap-2 rounded-md">
         {feedListData?.pages.map((page) =>
           page.data.map(function (feed) {

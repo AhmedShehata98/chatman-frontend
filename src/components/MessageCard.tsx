@@ -21,8 +21,8 @@ function MessageCard({ message, me }: { message: Message; me: User | null }) {
       <span
         className={`${clsx(
           message.sender._id !== me?._id
-            ? "bg-primary-300 after:-right-[0.80rem] after:border-b-transparent after:border-l-transparent after:border-r-transparent after:border-t-primary-300"
-            : "bg-secondary-200 after:-left-[0.80rem] after:border-b-transparent after:border-l-transparent after:border-l-transparent after:border-r-transparent after:border-t-secondary-200",
+            ? "bg-third-200 after:-right-[0.80rem] after:border-b-transparent after:border-l-transparent after:border-r-transparent after:border-t-primary-300"
+            : "bg-secondary-200 after:-left-[0.80rem] after:border-b-transparent after:border-l-transparent after:border-r-transparent after:border-t-secondary-200",
         )} relative mx-5 mt-2 flex w-[calc(100%-6.5rem)] max-w-[calc(100%-6.5rem)] flex-col content-end items-end justify-end gap-2 overflow-hidden rounded-md p-4 after:absolute after:top-0 after:h-6 after:w-6 after:border-[1rem] after:content-[''] max-md:me-2 max-md:ms-4`}
       >
         <p className="inline-block max-w-full break-words text-white">

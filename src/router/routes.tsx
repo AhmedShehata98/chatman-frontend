@@ -58,6 +58,12 @@ export const router = createBrowserRouter([
           {
             path: ":feedName",
             element: <FeedRoom />,
+            children: [
+              {
+                path: ":feedName",
+                element: <FeedRoom />,
+              },
+            ],
           },
         ],
       },

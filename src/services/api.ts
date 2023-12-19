@@ -16,8 +16,11 @@ export const ENDPOINTS = {
   clearMessages: "/api/message/clear",
   uploadImage: "/api/upload/img",
   posts: "/api/posts",
+  postsDetails: "/api/posts/post-details",
+  postReactions: "api/posts/reaction",
   feeds: "/api/feeds",
   feedsFollowerCheck: "/api/feeds/is-follower",
+  comments: "/api/comments",
 };
 export const CHATMAN_API = axios.create({
   baseURL,

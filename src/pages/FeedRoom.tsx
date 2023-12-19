@@ -1,31 +1,31 @@
 import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
 import { useState, useEffect, useRef } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useSearchParams, useLocation } from "react-router-dom";
 import { followFeed, getFeedById, isFollower } from "../services/feeds.api";
-import Avatar from "../components/Avatar";
 import { getAllPosts } from "../services/posts.api";
-import ConversationFooterWrapper from "../components/ConversationFooterWrapper";
+import ConversationFooterWrapper, {
+  FormInputType,
+} from "../components/ConversationFooterWrapper";
 import { chatManWebSocket } from "../services/ws";
 import { wsEventsKeys } from "../constants/wsConstants";
 import useFeedsMessages from "../hooks/useFeedsMessages";
 import { useRecoilValue } from "recoil";
 import { authStateAtom } from "../atoms/login.atom";
-import { feedInputsAtom } from "../atoms/feed.atom";
 import PostCard from "../components/PostCard";
 import { ROUTES_LIST } from "../router/routes-list";
 import LoadingIndicator from "../components/LoadingIndicator";
 import clsx from "clsx";
+import PostDetails from "./PostDetails";
+import ConversationHeader from "../components/ConversationHeader";
 
 function FeedRoom() {
   const location = useLocation();
+  const [searchParams] = useSearchParams();
   const { user: me, token } = useRecoilValue(authStateAtom);
-  const postContent = useRecoilValue(feedInputsAtom);
-  const navigate = useNavigate();
   const postsListRef = useRef<HTMLElement | null>(null);
 
   const { handleCreateFeedPost } = useFeedsMessages({
     feedId: location.state,
-    userId: me?._id as string,
   });
   const [limit, _setLimit] = useState(8);
   const {
@@ -34,8 +34,9 @@ function FeedRoom() {
     isFetched: FetchedFeedDetails,
   } = useQuery({
     queryKey: ["feed-details", location.state],
-    queryFn: () => getFeedById(location.state),
-    enabled: Boolean(location.state),
+    queryFn: () =>
+      getFeedById({ feedId: location.state, token: token as string }),
+    enabled: Boolean(location.state) && token !== null,
   });
   const { data: isFollowerUser } = useQuery({
     queryKey: ["is-follower", token],
@@ -65,11 +66,20 @@ function FeedRoom() {
       followFeed({ feedId, token: token as string }),
   });
 
-  const handleSendPost = (ev: React.FormEvent<HTMLFormElement>) => {
-    ev.preventDefault();
-    handleCreateFeedPost({
-      media: postContent.attachmentContent,
-      text: postContent.textContent,
+  const handleSendPost = (message: FormInputType, reset: Function) => {
+    handleCreateFeedPost(
+      {
+        media: message.mediaContent as string,
+        text: message.textContent,
+      },
+      reset,
+    );
+  };
+
+  const handleFollowFeed = () => {
+    startFollowFeed(location.state, {
+      onSuccess: (data) => console.log(data),
+      onError: (err) => console.log(err),
     });
   };
 
@@ -85,68 +95,29 @@ function FeedRoom() {
       behavior: "smooth",
       top: postsListRef.current?.scrollHeight,
     });
-  }, [postsListRef.current?.scrollHeight]);
-
-  console.log(isFollowerUser);
+  }, []);
 
   return (
-    <div className="relative flex h-dynamic-screen w-full flex-col items-start justify-between overflow-hidden">
-      <header className="z-10 flex w-full items-center justify-start bg-primary-300 px-3 py-2">
+    <div className="feed-room">
+      <ConversationHeader>
         <div className="flex items-center justify-start gap-3">
-          <button
-            type="button"
-            onClick={() => navigate(ROUTES_LIST.feeds)}
-            className="h-10 w-10 rounded-full text-3xl leading-3 text-white hover:bg-secondary-100 hover:bg-opacity-50 max-md:h-8 max-md:w-8 max-md:text-xl"
-          >
-            <i className="fi fi-rr-arrow-small-left"></i>
-          </button>
-          <div className="flex items-center justify-start gap-4">
-            <Avatar
-              fullName={feedDetails?.feedName || "n a"}
-              showStatus={false}
-              src={feedDetails?.feedCover || null}
-              className="h-16 w-16 max-md:h-12 max-md:w-12"
-            />
-            <span>
-              <p className="font-medium capitalize text-white max-md:text-sm">
-                {feedDetails?.feedName}
-              </p>
-              <code className="text-sm text-slate-300 max-md:text-xs">
-                {feedDetails?.followers.length === 0 && "no followers"}
-                {feedDetails?.followers &&
-                  feedDetails?.followers.length >= 1 &&
-                  `${feedDetails?.followers.length} - followers`}
-              </code>
-            </span>
-          </div>
+          <ConversationHeader.backButton backTo={ROUTES_LIST.feeds} />
+          <ConversationHeader.FeedInformation
+            feedCover={feedDetails?.feedCover}
+            feedName={feedDetails?.feedName}
+            followersCount={feedDetails?.followers.length}
+          />
         </div>
         <div className="ms-auto flex items-center justify-end">
           {FetchedFeedDetails &&
             !isFollower &&
             feedDetails?.owner !== me?._id && (
-              <button
-                type="button"
-                className="flex items-center justify-center gap-3 rounded-md bg-secondary-100 px-6 py-3 text-lg font-medium capitalize leading-3 hover:brightness-125"
-                onClick={() =>
-                  startFollowFeed(location.state, {
-                    onSuccess: (data) => console.log(data),
-                    onError: (err) => console.log(err),
-                  })
-                }
-              >
-                <i className="fi fi-sr-add"></i>
-                <p>follow</p>
-              </button>
+              <ConversationHeader.FollowButton onClick={handleFollowFeed} />
             )}
-          <button className="h-12 w-12 text-2xl text-white max-md:text-xl">
-            <i className="fi fi-sr-menu-dots-vertical"></i>
-          </button>
+          <ConversationHeader.OptionsMenuButton onClick={() => {}} />
         </div>
-      </header>
-      <section
-        ref={postsListRef}
-        className="overlay-layer relative h-[calc(100dvh-7rem)] max-h-[calc(100dvh-7rem)] w-full overflow-y-auto"
-      >
+      </ConversationHeader>
+      <section ref={postsListRef} className="chat__body">
         <div
           className={`${clsx(
             gettingPosts
@@ -157,11 +128,12 @@ function FeedRoom() {
           <LoadingIndicator isShown={true} />
         </div>
 
-        <ul className="relative z-10 flex max-w-3xl flex-col gap-4 p-9 max-md:p-3">
+        <ul className="feed-list">
           {isFetchedPosts &&
             PostsData?.pages?.map((page) =>
               page.posts.map((post) => (
                 <PostCard
+                  key={post._id}
                   data={{
                     ...post,
                   }}
@@ -177,7 +149,7 @@ function FeedRoom() {
             </div>
           )}
       </section>
-      {!isFollower && feedDetails?.owner !== me?._id && (
+      {!isFollowerUser && feedDetails?.owner !== me?._id && (
         <div className="z-10 flex w-full items-center justify-start bg-primary-300 px-3 py-4">
           <button
             type="button"
@@ -188,9 +160,12 @@ function FeedRoom() {
           </button>
         </div>
       )}
-      {!FetchedFeedDetails || feedDetails?.owner !== me?._id ? null : (
-        <ConversationFooterWrapper onSubmit={handleSendPost} />
+      {FetchedFeedDetails && feedDetails?.owner === me?._id && (
+        <ConversationFooterWrapper
+          sendData={(message, reset) => handleSendPost(message, reset)}
+        />
       )}
+      {searchParams.get("post") !== null && <PostDetails />}
     </div>
   );
 }
